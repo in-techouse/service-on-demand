@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffff">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+        <Button
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_settings_black_24dp"></Button>
+        <Button
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_chat_black_24dp"></Button>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="#19AF9D"></View>
+
+        <TextView
+            android:textColor="#ffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:text="@string/app_name"
+            android:textStyle="italic"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"></TextView>
+
+
+<!--        <ViewFlipper-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginRight="20dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="180dp"-->
+<!--            android:layout_below="@id/title"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:id="@+id/flip"></ViewFlipper>-->
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/titlecategory"
+            android:text="What do you need help with?"
+            android:textColor="#19AF9D"
+            android:textSize="16sp"
+            android:layout_below="@id/title"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="16dp"
+            android:padding="2dp"
+            android:layout_marginLeft="16dp"></TextView>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titlecategory"
+            android:layout_marginTop="10dp">
+            <Button
+                android:id="@+id/ac"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/ac"></Button>
+            <Button
+                android:id="@+id/electrician"
+                android:layout_centerHorizontal="true"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/electrician"></Button>
+            <Button
+                android:id="@+id/appliances"
+                android:layout_alignParentRight="true"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/appliances"></Button>
+            <Button
+                android:id="@+id/tv"
+                android:layout_below="@id/ac"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/tv"></Button>
+            <Button
+                android:id="@+id/plumber"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/plumber"
+                android:layout_below="@id/appliances"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_alignParentRight="true"></Button>
+            <Button
+                android:id="@+id/referigerator"
+                android:layout_below="@id/electrician"
+                android:layout_centerHorizontal="true"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/refrigerator"></Button>
+            <Button
+                android:id="@+id/carpenter"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/carpenter"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
+                android:layout_below="@+id/tv"></Button>
+            <Button
+                android:id="@+id/computer"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/computer"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/referigerator"></Button>
+            <Button
+                android:id="@+id/painting"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/painting"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_below="@+id/plumber"></Button>
+            <Button
+                android:id="@+id/carwash"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/carwash"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
+                android:layout_below="@+id/carpenter"></Button>
+            <Button
+                android:id="@+id/mobile"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/mobile"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/computer"></Button>
+            <Button
+                android:id="@+id/pestcontrol"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/pestcontrol"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_below="@+id/painting"></Button>
+            <Button
+                android:id="@+id/homesecurity"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/homesecurity"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_below="@+id/carwash"></Button>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+</ScrollView>
