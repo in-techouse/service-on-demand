@@ -1,7 +1,6 @@
 package com.example.servicesondemand;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,8 +16,8 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run(){
-                Intent homeintent = new Intent(MainActivity.this,getstart.class);
-                startActivity(homeintent);
+                Intent homeIntent = new Intent(MainActivity.this, GetStarted.class);
+                startActivity(homeIntent);
                 finish();
             }
         },SPLASH_TIME_OUT);

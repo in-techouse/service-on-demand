@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
-public class home extends AppCompatActivity {
+public class Home extends AppCompatActivity {
 
     ViewFlipper v_flipper;
 

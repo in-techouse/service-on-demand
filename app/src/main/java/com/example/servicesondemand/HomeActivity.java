@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
-public class homeactivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 //
 //    ViewFlipper flip;
 //
@@ -32,14 +32,14 @@ public class homeactivity extends AppCompatActivity {
 //    }
 //
 //    public void flipimages(int image){
-//        ImageView imageView=new ImageView(new homeactivity());
+//        ImageView imageView=new ImageView(new HomeActivity());
 //        imageView.setBackgroundResource(image);
 //        flip.addView(imageView);
 //        flip.setFlipInterval(2000);
 //        flip.setAutoStart(true);
 //
-//        flip.setInAnimation(new homeactivity(),android.R.anim.slide_in_left);
-//        flip.setOutAnimation(new homeactivity(),android.R.anim.slide_out_right);
+//        flip.setInAnimation(new HomeActivity(),android.R.anim.slide_in_left);
+//        flip.setOutAnimation(new HomeActivity(),android.R.anim.slide_out_right);
 //
 //    }
 }
