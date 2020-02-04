@@ -1,4 +1,4 @@
-package com.example.servicesondemand;
+package com.example.servicesondemand.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
+
+import com.example.servicesondemand.R;
 
 public class Home extends AppCompatActivity {
 

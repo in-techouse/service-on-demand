@@ -13,13 +13,13 @@
         android:fullBackupContent="@xml/backup_descriptor"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name=".GetStarted"/>
+        <activity android:name=".activities.GetStarted"/>
 
-        <activity android:name=".Home"/>
+        <activity android:name=".activities.Home"/>
 
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".activities.HomeActivity" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
