@@ -2,7 +2,6 @@ package com.example.servicesondemand;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,19 +10,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-
 import java.util.concurrent.TimeUnit;
 
-public class getstart extends AppCompatActivity
+public class GetStarted extends AppCompatActivity
 {
     Button home;
     private EditText InputUserPhoneNumber, InputUserVerificationCode;
@@ -49,7 +45,7 @@ public class getstart extends AppCompatActivity
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getstart.this,home.class);
+                Intent intent = new Intent(GetStarted.this, Home.class);
                  startActivity(intent);
             }
         });
@@ -72,7 +68,7 @@ public class getstart extends AppCompatActivity
 
                 if (TextUtils.isEmpty(phoneNumber))
                 {
-                    Toast.makeText(getstart.this, "Please enter your phone number first...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GetStarted.this, "Please enter your phone number first...", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -82,7 +78,7 @@ public class getstart extends AppCompatActivity
                     loadingBar.show();
 
 
-                    PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, getstart.this, callbacks);
+                    PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, GetStarted.this, callbacks);
                 }
             }
         });
@@ -101,7 +97,7 @@ public class getstart extends AppCompatActivity
 
                 if (TextUtils.isEmpty(verificationCode))
                 {
-                    Toast.makeText(getstart.this, "Please write verification code first...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GetStarted.this, "Please write verification code first...", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -127,7 +123,7 @@ public class getstart extends AppCompatActivity
             @Override
             public void onVerificationFailed(FirebaseException e)
             {
-                Toast.makeText(getstart.this, "Invalid Phone Number, Please enter correct phone number with your country code...", Toast.LENGTH_LONG).show();
+                Toast.makeText(GetStarted.this, "Invalid Phone Number, Please enter correct phone number with your country code..." +  e.getMessage(), Toast.LENGTH_LONG).show();
                 loadingBar.dismiss();
 
                 InputUserPhoneNumber.setVisibility(View.VISIBLE);
@@ -145,7 +141,7 @@ public class getstart extends AppCompatActivity
                 mResendToken = token;
 
 
-                Toast.makeText(getstart.this, "Code has been sent, please check and verify...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GetStarted.this, "Code has been sent, please check and verify...", Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();
 
                 InputUserPhoneNumber.setVisibility(View.INVISIBLE);
@@ -168,13 +164,13 @@ public class getstart extends AppCompatActivity
                         if (task.isSuccessful())
                         {
                             loadingBar.dismiss();
-                            Toast.makeText(getstart.this, "Congratulations, you're logged in Successfully.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GetStarted.this, "Congratulations, you're logged in Successfully.", Toast.LENGTH_SHORT).show();
                             SendUserToMainActivity();
                         }
                         else
                         {
                             String message = task.getException().toString();
-                            Toast.makeText(getstart.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GetStarted.this, "Error: " + message, Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();
                         }
                     }
@@ -184,7 +180,7 @@ public class getstart extends AppCompatActivity
 
     private void SendUserToMainActivity()
     {
-        Intent mainIntent = new Intent(getstart.this, home.class);
+        Intent mainIntent = new Intent(GetStarted.this, Home.class);
         startActivity(mainIntent);
         finish();
     }
