@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.director.Helpers;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -19,6 +20,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.shreyaspatil.MaterialDialog.MaterialDialog;
+import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
+
 import java.util.concurrent.TimeUnit;
 
 public class GetStarted extends AppCompatActivity
@@ -34,6 +38,7 @@ public class GetStarted extends AppCompatActivity
 
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
+    private Helpers helpers;
 
 
 
@@ -61,19 +66,28 @@ public class GetStarted extends AppCompatActivity
         VerifyButton = (Button) findViewById(R.id.verify_button);
         loadingBar = new ProgressDialog(this);
 
+        helpers=new Helpers();
+
 
         SendVerificationCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
+                boolean flag = helpers.isConnected(GetStarted.this);
+                if (!flag) {
+                    helpers.showError(GetStarted.this,"ËRROR","NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
+                    return;
+                }
+
+
                 String phoneNumber = InputUserPhoneNumber.getText().toString();
 
-                if (TextUtils.isEmpty(phoneNumber))
+                if (phoneNumber.length() !=13)
                 {
-                    Toast.makeText(GetStarted.this, "Please enter your phone number first...", Toast.LENGTH_SHORT).show();
+                    InputUserPhoneNumber.setError("Enter a valid phone number");
                 }
                 else
                 {
+                    InputUserPhoneNumber.setError(null);
                     loadingBar.setTitle("Phone Verification");
                     loadingBar.setMessage("Please wait, while we are authenticating using your phone...");
                     loadingBar.setCanceledOnTouchOutside(false);
