@@ -27,6 +27,7 @@ public class Helpers {
                 .setPositiveButton("cancel", R.drawable.cancel, new MaterialDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
+
                         // Delete Operation
                     }
                 })
