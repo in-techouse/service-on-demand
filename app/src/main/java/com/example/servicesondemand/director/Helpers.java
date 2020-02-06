@@ -19,6 +19,7 @@ public class Helpers {
         return  connected;
     }
 
+
     public void showError(Activity activity,String title, String message){
         MaterialDialog mDialog = new MaterialDialog.Builder(activity)
                 .setTitle(title)
