@@ -25,15 +25,13 @@ public class Helpers {
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("cancel", R.drawable.cancel, new MaterialDialog.OnClickListener() {
+                .setPositiveButton("OK", R.drawable.cancel, new MaterialDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-
-
-                        // Delete Operation
+                        dialogInterface.dismiss();
                     }
                 })
-                .setNegativeButton("ok", R.drawable.ok, new MaterialDialog.OnClickListener() {
+                .setNegativeButton("CANCEL", R.drawable.ok, new MaterialDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
                         dialogInterface.dismiss();
