@@ -8,8 +8,6 @@ import android.os.Handler;
 import com.example.servicesondemand.R;
 
 public class MainActivity extends Activity {
-
-
     private static int SPLASH_TIME_OUT = 1900;
 
     @Override

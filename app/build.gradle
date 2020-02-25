@@ -46,6 +46,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
+    implementation 'com.chaos.view:pinview:1.4.3'
     // Glide Image Loading
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'

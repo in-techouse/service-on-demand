@@ -105,4 +105,6 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="title_activity_vender_dashboard">VenderDashboard</string>
+    <string name="enter_the_otp_code_you_received">Enter the OTP Code you received</string>
+    <string name="resend_otp">RESEND OTP</string>
 </resources>

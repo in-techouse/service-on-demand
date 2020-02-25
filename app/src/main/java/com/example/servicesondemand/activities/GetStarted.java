@@ -1,17 +1,18 @@
 package com.example.servicesondemand.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.chaos.view.PinView;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,12 +22,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.shreyaspatil.MaterialDialog.MaterialDialog;
-import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 import java.util.concurrent.TimeUnit;
 
 public class GetStarted extends AppCompatActivity {
+    private PinView otpPinView;
+    private LinearLayout otpMain, main;
     private EditText InputUserPhoneNumber;
     private Button SendVerificationCodeButton;
 
@@ -38,6 +39,7 @@ public class GetStarted extends AppCompatActivity {
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private Helpers helpers;
+    private boolean isCodeSent = false;
 
 
     @Override
@@ -51,7 +53,9 @@ public class GetStarted extends AppCompatActivity {
 
         InputUserPhoneNumber = (EditText) findViewById(R.id.phone_number_input);
         SendVerificationCodeButton = (Button) findViewById(R.id.send_ver_code_button);
-//        VerifyButton = (Button) findViewById(R.id.verify_button);
+        otpPinView = findViewById(R.id.otpPinView);
+        otpMain = findViewById(R.id.otpMain);
+        main = findViewById(R.id.main);
         loadingBar = new ProgressDialog(this);
 
         helpers = new Helpers();
@@ -66,20 +70,19 @@ public class GetStarted extends AppCompatActivity {
                     return;
                 }
 
+                if (!isCodeSent) {
+                    String phoneNumber = InputUserPhoneNumber.getText().toString();
 
-                String phoneNumber = InputUserPhoneNumber.getText().toString();
-
-                if (phoneNumber.length() != 13) {
-                    InputUserPhoneNumber.setError("Enter a valid phone number");
-                } else {
-                    InputUserPhoneNumber.setError(null);
-                    loadingBar.setTitle("Phone Verification");
-                    loadingBar.setMessage("Please wait, while we are authenticating using your phone...");
-                    loadingBar.setCanceledOnTouchOutside(false);
-                    loadingBar.show();
-
-
-                    PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, GetStarted.this, callbacks);
+                    if (phoneNumber.length() != 13) {
+                        InputUserPhoneNumber.setError("Enter a valid phone number");
+                    } else {
+                        InputUserPhoneNumber.setError(null);
+                        loadingBar.setTitle("Phone Verification");
+                        loadingBar.setMessage("Please wait, while we are authenticating using your phone...");
+                        loadingBar.setCanceledOnTouchOutside(false);
+                        loadingBar.show();
+                        PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, GetStarted.this, callbacks);
+                    }
                 }
             }
         });
@@ -124,28 +127,22 @@ public class GetStarted extends AppCompatActivity {
                 Toast.makeText(GetStarted.this, "Invalid Phone Number, Please enter correct phone number with your country code..." + e.getMessage(), Toast.LENGTH_LONG).show();
                 loadingBar.dismiss();
 
-                InputUserPhoneNumber.setVisibility(View.VISIBLE);
-                SendVerificationCodeButton.setVisibility(View.VISIBLE);
+//                InputUserPhoneNumber.setVisibility(View.VISIBLE);
+//                SendVerificationCodeButton.setVisibility(View.VISIBLE);
 
 //                InputUserVerificationCode.setVisibility(View.INVISIBLE);
 //                VerifyButton.setVisibility(View.INVISIBLE);
             }
 
-            public void onCodeSent(String verificationId,
-                                   PhoneAuthProvider.ForceResendingToken token) {
+            public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken token) {
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
-
-
-                Toast.makeText(GetStarted.this, "Code has been sent, please check and verify...", Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();
 
-                InputUserPhoneNumber.setVisibility(View.INVISIBLE);
-                SendVerificationCodeButton.setVisibility(View.INVISIBLE);
-
-//                InputUserVerificationCode.setVisibility(View.VISIBLE);
-//                VerifyButton.setVisibility(View.VISIBLE);
+                main.setVisibility(View.GONE);
+                otpMain.setVisibility(View.VISIBLE);
+                SendVerificationCodeButton.setText("VERIFY");
             }
         };
     }
@@ -171,9 +168,9 @@ public class GetStarted extends AppCompatActivity {
 
 
     private void SendUserToMainActivity() {
-        Intent mainIntent = new Intent(GetStarted.this, Home.class);
-        startActivity(mainIntent);
-        finish();
+//        Intent mainIntent = new Intent(GetStarted.this, Home.class);
+//        startActivity(mainIntent);
+//        finish();
     }
 
 }
