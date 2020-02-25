@@ -16,13 +16,20 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
+            android:name=".activities.VenderDashboard"
+            android:label="@string/title_activity_vender_dashboard"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activities.CustomerDashboard"
+            android:label="@string/title_activity_customer_dashboard"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.CreatePost"
             android:label="@string/title_activity_create_post"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.GetStarted" />
         <activity android:name=".activities.Home" />
         <activity android:name=".activities.HomeActivity" />
-
         <activity
             android:name=".activities.MainActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
