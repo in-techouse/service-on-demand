@@ -3,6 +3,7 @@ package com.example.servicesondemand.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,13 +16,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.chaos.view.PinView;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
+import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -83,6 +92,18 @@ public class GetStarted extends AppCompatActivity {
                         loadingBar.show();
                         PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, GetStarted.this, callbacks);
                     }
+                } else {
+                    String otp = otpPinView.getText().toString();
+                    if (otp.length() != 6) {
+                        otpPinView.setError("The provided OTP is incorrect");
+                    } else {
+                        loadingBar.setTitle("Phone Verification");
+                        loadingBar.setMessage("Please wait, while we are authenticating using your phone...");
+                        loadingBar.setCanceledOnTouchOutside(false);
+                        loadingBar.show();
+                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+                        signInWithPhoneAuthCredential(credential);
+                    }
                 }
             }
         });
@@ -110,7 +131,7 @@ public class GetStarted extends AppCompatActivity {
 //                    loadingBar.show();
 //
 //                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verificationCode);
-//                    signInWithPhoneAuthCredential(credential);
+//                    sgnInWithPhoneAuthCredential(credential);
 //                }
 //            }
 //        });
@@ -124,8 +145,9 @@ public class GetStarted extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Toast.makeText(GetStarted.this, "Invalid Phone Number, Please enter correct phone number with your country code..." + e.getMessage(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(GetStarted.this, "Invalid Phone Number, Please enter correct phone number with your country code..." + e.getMessage(), Toast.LENGTH_LONG).show();
                 loadingBar.dismiss();
+                helpers.showError(GetStarted.this, "ERROR", e.getMessage());
 
 //                InputUserPhoneNumber.setVisibility(View.VISIBLE);
 //                SendVerificationCodeButton.setVisibility(View.VISIBLE);
@@ -143,6 +165,7 @@ public class GetStarted extends AppCompatActivity {
                 main.setVisibility(View.GONE);
                 otpMain.setVisibility(View.VISIBLE);
                 SendVerificationCodeButton.setText("VERIFY");
+                isCodeSent = true;
             }
         };
     }
@@ -154,16 +177,47 @@ public class GetStarted extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            loadingBar.dismiss();
-                            Toast.makeText(GetStarted.this, "Congratulations, you're logged in Successfully.", Toast.LENGTH_SHORT).show();
-                            SendUserToMainActivity();
-                        } else {
-                            String message = task.getException().toString();
-                            Toast.makeText(GetStarted.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
+                            checkUserDetail();
                         }
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                loadingBar.dismiss();
+                helpers.showError(GetStarted.this, "ERROR", e.getMessage());
+            }
+        });
+    }
+
+    private void checkUserDetail() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
+        String phoneNumber = InputUserPhoneNumber.getText().toString();
+        reference.child(phoneNumber).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user == null) {
+
+                } else {
+                    Session session = new Session(getApplicationContext());
+                    session.setSession(user);
+                    if (user.getType() == 0) {
+                        Intent intent = new Intent(GetStarted.this, CustomerDashboard.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(GetStarted.this, VendorDashboard.class);
+                        startActivity(intent);
+                    }
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                loadingBar.dismiss();
+                helpers.showError(GetStarted.this, "ERROR", "Something went wrong please try again");
+            }
+        });
     }
 
 
