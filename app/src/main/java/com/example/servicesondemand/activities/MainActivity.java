@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent homeIntent = new Intent(MainActivity.this, GetStarted.class);
+                Intent homeIntent = new Intent(MainActivity.this, VendorDashboard.class);
                 startActivity(homeIntent);
                 finish();
             }

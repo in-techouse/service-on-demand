@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".activities.VenderDashboard"
+            android:name=".activities.VendorDashboard"
             android:label="@string/title_activity_vender_dashboard"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity

@@ -5,13 +5,13 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/post"
-            android:icon="@drawable/user_mail"
+            android:id="@+id/nav_post"
+            android:icon="@drawable/mail"
             android:title="Post" />
         <item
-            android:id="@+id/nav_orders"
+            android:id="@+id/nav_order"
             android:icon="@drawable/order"
-            android:title="Orders" />
+            android:title="Order" />
         <item
             android:id="@+id/nav_editPost"
             android:icon="@drawable/blog"
@@ -25,7 +25,5 @@
             android:icon="@drawable/logout"
             android:title="Logout" />
     </group>
-
-
 
 </menu>
