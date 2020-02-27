@@ -16,6 +16,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
+            android:name=".activities.CreateUserProfile"
+            android:label="@string/title_activity_create_user_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.VendorDashboard"
             android:label="@string/title_activity_vender_dashboard"
             android:theme="@style/AppTheme.NoActionBar"

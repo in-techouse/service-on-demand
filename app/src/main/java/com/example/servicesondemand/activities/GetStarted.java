@@ -197,7 +197,9 @@ public class GetStarted extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user == null) {
-
+                    Intent intent = new Intent(GetStarted.this, CreateUserProfile.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Session session = new Session(getApplicationContext());
                     session.setSession(user);
