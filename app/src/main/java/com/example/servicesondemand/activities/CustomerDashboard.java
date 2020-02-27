@@ -1,5 +1,6 @@
 package com.example.servicesondemand.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -30,8 +31,8 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Make a new post", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent it = new Intent(CustomerDashboard.this, CreatePost.class);
+                startActivity(it);
             }
         });
         drawer = findViewById(R.id.drawer_layout);

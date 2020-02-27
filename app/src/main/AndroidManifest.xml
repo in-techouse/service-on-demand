@@ -18,21 +18,33 @@
         <activity
             android:name=".activities.VendorDashboard"
             android:label="@string/title_activity_vender_dashboard"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CustomerDashboard"
             android:label="@string/title_activity_customer_dashboard"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CreatePost"
             android:label="@string/title_activity_create_post"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.GetStarted" />
-        <activity android:name=".activities.Home" />
-        <activity android:name=".activities.HomeActivity" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".activities.CustomerDashboard"/>
+        <activity
+            android:name=".activities.GetStarted"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.Home"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.HomeActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
