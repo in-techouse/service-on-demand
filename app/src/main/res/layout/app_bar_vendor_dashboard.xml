@@ -23,5 +23,4 @@
     <include layout="@layout/content_vendor_dashboard" />
 
 
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

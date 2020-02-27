@@ -5,27 +5,24 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/post"
+            android:id="@+id/nav_my_post"
             android:icon="@drawable/user_mail"
-            android:title="Post" />
+            android:title="My Post" />
         <item
             android:id="@+id/nav_orders"
             android:icon="@drawable/order"
-            android:title="Orders" />
+            android:title="My Orders" />
         <item
-            android:id="@+id/nav_editPost"
-            android:icon="@drawable/blog"
-            android:title="Edit Post" />
-        <item
-            android:id="@+id/nav_notification"
+            android:id="@+id/nav_notifications"
             android:icon="@drawable/bell"
-            android:title="Notification" />
+            android:title="My Notifications" />
+        <item
+            android:id="@+id/nav_edit_profile"
+            android:icon="@drawable/blog"
+            android:title="Edit Profile" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
             android:title="Logout" />
     </group>
-
-
-
 </menu>
