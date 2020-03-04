@@ -89,7 +89,6 @@ public class CreatePost extends AppCompatActivity {
             }
         };
 
-
         //time
         mDisplayedTime = (TextView)findViewById(R.id.time);
         mDisplayedTime.setOnClickListener(new View.OnClickListener() {
