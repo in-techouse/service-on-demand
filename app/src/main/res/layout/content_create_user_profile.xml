@@ -21,7 +21,7 @@
             android:layout_marginTop="11dp">
 
             <EditText
-                android:id="@+id/first_name"
+                android:id="@+id/first_name_input"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="30dp"
@@ -39,7 +39,7 @@
             android:layout_marginTop="11dp">
 
             <EditText
-                android:id="@+id/last_name"
+                android:id="@+id/last_name_input"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Enter last name..."
@@ -56,7 +56,7 @@
             android:layout_marginTop="11dp">
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/email_input"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Enter your email here..."
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/submit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
