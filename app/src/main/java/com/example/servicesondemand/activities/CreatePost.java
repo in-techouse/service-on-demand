@@ -6,11 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +15,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.servicesondemand.R;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import java.sql.Time;
+import com.example.servicesondemand.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.Calendar;
 
 public class CreatePost extends AppCompatActivity {
@@ -38,10 +37,14 @@ public class CreatePost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,52 +54,52 @@ public class CreatePost extends AppCompatActivity {
         });
 
 
-            post =(Button)findViewById(R.id.post);
-            post.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(CreatePost.this,"Your booking is done...",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(CreatePost.this, CreatePost.class);
-                    startActivity(intent);
-                }
-            });
+        post = (Button) findViewById(R.id.post);
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(CreatePost.this, "Your booking is done...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(CreatePost.this, CreatePost.class);
+                startActivity(intent);
+            }
+        });
 
-            //date
+        //date
 
-            mDisplayedDate = (TextView)findViewById(R.id.date);
-            mDisplayedDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Calendar cal= Calendar.getInstance();
-                    int year = cal.get(Calendar.YEAR);
-                    int month= cal.get(Calendar.MONTH);
-                    int day = cal.get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog dialog= new DatePickerDialog(CreatePost.this,
-                            android.R.style.Theme_DeviceDefault_Dialog,
-                            mDatesetlistener, year,month,day);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                }
-            });
+        mDisplayedDate = (TextView) findViewById(R.id.date);
+        mDisplayedDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog dialog = new DatePickerDialog(CreatePost.this,
+                        android.R.style.Theme_DeviceDefault_Dialog,
+                        mDatesetlistener, year, month, day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
 
-        mDatesetlistener= new DatePickerDialog.OnDateSetListener() {
+        mDatesetlistener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month=month+1;
-                Log.d(TAG, "onDateSet: mm/dd/yy: " +month+ "/" +day+ "/" +year);
-                String date = month+ "/" +day+ "/" +year;
+                month = month + 1;
+                Log.d(TAG, "onDateSet: mm/dd/yy: " + month + "/" + day + "/" + year);
+                String date = month + "/" + day + "/" + year;
                 mDisplayedDate.setText(date);
             }
         };
 
         //time
-        mDisplayedTime = (TextView)findViewById(R.id.time);
+        mDisplayedTime = (TextView) findViewById(R.id.time);
         mDisplayedTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar cal= Calendar.getInstance();
+                Calendar cal = Calendar.getInstance();
                 int hour = cal.get(Calendar.HOUR);
-                int minute= cal.get(Calendar.MINUTE);
+                int minute = cal.get(Calendar.MINUTE);
                 TimePickerDialog dialog = new TimePickerDialog(CreatePost.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
@@ -109,16 +112,17 @@ public class CreatePost extends AppCompatActivity {
                 dialog.show();
             }
         });
-        mTimesetlistener= new TimePickerDialog.OnTimeSetListener() {
+        mTimesetlistener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                Log.d(TAG, "onTimeSet: hh:mm: " +hour+ ":" +minute);
-                String time = hour+ ":" +minute ;
+                Log.d(TAG, "onTimeSet: hh:mm: " + hour + ":" + minute);
+                String time = hour + ":" + minute;
                 mDisplayedTime.setText(time);
             }
         };
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

@@ -21,15 +21,17 @@ public class MainActivity extends Activity {
             public void run() {
                 Session session = new Session(getApplicationContext());
                 User user = session.getUser();
-                if(user == null){
+                if (user == null) {
                     Intent intent = new Intent(MainActivity.this, GetStarted.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                }
-                else if (user.getType() == 0) {
+                } else if (user.getType() == 0) {
                     Intent intent = new Intent(MainActivity.this, CustomerDashboard.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(MainActivity.this, VendorDashboard.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
                 finish();

@@ -1,8 +1,11 @@
 package com.example.servicesondemand.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,11 +14,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.User;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VendorDashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private User user;
+    private Session session;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +41,27 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        session = new Session(VendorDashboard.this);
+        user = session.getUser();
+
+        View header = navigationView.getHeaderView(0);
+        TextView name = header.findViewById(R.id.name);
+        TextView phone = header.findViewById(R.id.phone);
+        TextView email = header.findViewById(R.id.email);
+        TextView category = header.findViewById(R.id.category);
+        TextView perHourCharge = header.findViewById(R.id.perHourCharge);
+        CircleImageView image = header.findViewById(R.id.image);
+
+        if (user.getImage() != null && user.getImage().length() > 0) {
+            Glide.with(getApplicationContext()).load(user.getImage()).into(image);
+        }
+
+        name.setText(user.getFirstName() + " " + user.getLastName());
+        phone.setText(user.getPhone());
+        email.setText(user.getEmail());
+        category.setText(user.getCategory());
+        perHourCharge.setText(user.getPerHourCharge() + " RS / Hr");
     }
 
     @Override
@@ -49,6 +82,14 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
                 break;
             }
             case R.id.nav_logout: {
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                if (auth.getCurrentUser() != null)
+                    auth.signOut();
+                session.destroySession();
+                Intent intent = new Intent(VendorDashboard.this, GetStarted.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
                 break;
             }
         }

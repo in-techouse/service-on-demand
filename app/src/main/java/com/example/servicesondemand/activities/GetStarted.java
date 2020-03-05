@@ -107,35 +107,6 @@ public class GetStarted extends AppCompatActivity {
             }
         });
 
-
-//        VerifyButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                InputUserPhoneNumber.setVisibility(View.INVISIBLE);
-//                SendVerificationCodeButton.setVisibility(View.INVISIBLE);
-//
-//
-//                String verificationCode = InputUserVerificationCode.getText().toString();
-//
-//                if (TextUtils.isEmpty(verificationCode))
-//                {
-//                    Toast.makeText(GetStarted.this, "Please write verification code first...", Toast.LENGTH_SHORT).show();
-//                }
-//                else
-//                {
-//                    loadingBar.setTitle("Verification Code");
-//                    loadingBar.setMessage("Please wait, while we are verifying verification code...");
-//                    loadingBar.setCanceledOnTouchOutside(false);
-//                    loadingBar.show();
-//
-//                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verificationCode);
-//                    sgnInWithPhoneAuthCredential(credential);
-//                }
-//            }
-//        });
-
-
         callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
@@ -144,15 +115,8 @@ public class GetStarted extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-//                Toast.makeText(GetStarted.this, "Invalid Phone Number, Please enter correct phone number with your country code..." + e.getMessage(), Toast.LENGTH_LONG).show();
                 loadingBar.dismiss();
                 helpers.showError(GetStarted.this, "ERROR", e.getMessage());
-
-//                InputUserPhoneNumber.setVisibility(View.VISIBLE);
-//                SendVerificationCodeButton.setVisibility(View.VISIBLE);
-
-//                InputUserVerificationCode.setVisibility(View.INVISIBLE);
-//                VerifyButton.setVisibility(View.INVISIBLE);
             }
 
             public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken token) {
@@ -207,9 +171,11 @@ public class GetStarted extends AppCompatActivity {
                     session.setSession(user);
                     if (user.getType() == 0) {
                         Intent intent = new Intent(GetStarted.this, CustomerDashboard.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(GetStarted.this, VendorDashboard.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
                     finish();
@@ -229,7 +195,7 @@ public class GetStarted extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(valueEventListener != null)
+        if (valueEventListener != null)
             reference.removeEventListener(valueEventListener);
     }
 }
