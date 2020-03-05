@@ -1,8 +1,8 @@
 package com.example.servicesondemand.model;
 
 public class User {
-    private String category,email,firstName,id,image,lastName,phone;
-    private Integer perHourCharge,type;
+    private String category, email, firstName, id, image, lastName, phone;
+    private int perHourCharge, type;
     private double rating;
 
     public String getCategory() {

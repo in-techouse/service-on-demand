@@ -3,12 +3,10 @@ package com.example.servicesondemand.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,7 +37,8 @@ public class GetStarted extends AppCompatActivity {
     private LinearLayout otpMain, main;
     private EditText InputUserPhoneNumber;
     private Button SendVerificationCodeButton;
-
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
+    private ValueEventListener valueEventListener;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
     private FirebaseAuth mAuth;
 
@@ -75,7 +74,7 @@ public class GetStarted extends AppCompatActivity {
             public void onClick(View v) {
                 boolean flag = helpers.isConnected(GetStarted.this);
                 if (!flag) {
-                    helpers.showError(GetStarted.this, "ËRROR", "NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
+                    helpers.showError(GetStarted.this, "ERROR", "NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
                     return;
                 }
 
@@ -190,14 +189,17 @@ public class GetStarted extends AppCompatActivity {
     }
 
     private void checkUserDetail() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
-        String phoneNumber = InputUserPhoneNumber.getText().toString();
-        reference.child(phoneNumber).addValueEventListener(new ValueEventListener() {
+        final String phoneNumber = InputUserPhoneNumber.getText().toString();
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                reference.child(phoneNumber).removeEventListener(valueEventListener);
                 User user = dataSnapshot.getValue(User.class);
                 if (user == null) {
                     Intent intent = new Intent(GetStarted.this, CreateUserProfile.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("phone", InputUserPhoneNumber.getText().toString());
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
                 } else {
@@ -216,17 +218,18 @@ public class GetStarted extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                reference.child(phoneNumber).removeEventListener(valueEventListener);
                 loadingBar.dismiss();
                 helpers.showError(GetStarted.this, "ERROR", "Something went wrong please try again");
             }
-        });
+        };
+        reference.child(phoneNumber).addValueEventListener(valueEventListener);
     }
 
-
-    private void SendUserToMainActivity() {
-//        Intent mainIntent = new Intent(GetStarted.this, Home.class);
-//        startActivity(mainIntent);
-//        finish();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(valueEventListener != null)
+            reference.removeEventListener(valueEventListener);
     }
-
 }

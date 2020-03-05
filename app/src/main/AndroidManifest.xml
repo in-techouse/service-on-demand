@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.servicesondemand">
 
+    <uses-permission android:name="android.permission.ACCEPT_GPS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -32,9 +37,9 @@
         <activity
             android:name=".activities.CreatePost"
             android:label="@string/title_activity_create_post"
+            android:parentActivityName=".activities.CustomerDashboard"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".activities.CustomerDashboard"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.GetStarted"
             android:windowSoftInputMode="stateHidden" />
