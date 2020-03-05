@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/date"
-                android:layout_marginLeft="53dp"
+                android:layout_marginLeft="70dp"
                 android:text="Time:"
                 android:textColor="#3186c7"
                 android:textSize="14dp"/>
@@ -53,6 +53,16 @@
                 android:hint="Decription here..."
                 android:inputType="textMultiLine"
                 android:padding="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address:"
+                android:textSize="14dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="#3186c7"
+                android:id="@+id/address"
+                android:layout_below="@+id/post_description"/>
 
             <Button
                 android:id="@+id/post"

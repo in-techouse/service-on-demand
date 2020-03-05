@@ -62,12 +62,12 @@ public class CreateUserProfile extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         Intent it = getIntent();
-        if (it == null) {
-            finish();
+        if (it == null) { //agar bundle mahi mila to
+            finish(); //jab data wapis mile ga to reverse order mai mile ga thas y use finish
             return;
         }
 
-        Bundle bundle = it.getExtras();
+        Bundle bundle = it.getExtras();  //bundle k ander jo data tha os ko access krne k liye it.getExtras() use this
         if (bundle == null) {
             finish();
             return;
@@ -100,7 +100,6 @@ public class CreateUserProfile extends AppCompatActivity {
                     helpers.showError(CreateUserProfile.this, "ERROR", "NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
                     return;
                 }
-
                 boolean isFlag = isValid();
 
                 if (isFlag) {
@@ -111,9 +110,9 @@ public class CreateUserProfile extends AppCompatActivity {
                     loadingBar.show();
                     if (imagePath == null) {
                         user.setImage("");
-                        saveToDatabase();
+                        saveToDatabase();    //function call to save data in database
                     } else {
-                        uploadImage();
+                        uploadImage();     //function call to upload image
                     }
                 }
             }
@@ -125,7 +124,7 @@ public class CreateUserProfile extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean flag = hasPermissions(CreateUserProfile.this, PERMISSIONS);
+                boolean flag = hasPermissions(CreateUserProfile.this, PERMISSIONS); //jab b user k mobile ki personal chiz ko access karna ho permission ki need hoti hai
                 if (!flag) {
                     ActivityCompat.requestPermissions(CreateUserProfile.this, PERMISSIONS, 1);
                 } else {
@@ -142,17 +141,18 @@ public class CreateUserProfile extends AppCompatActivity {
 
     }
 
-    private void uploadImage() {
+
+    private void uploadImage() {                       // .getReference().child("Users")that mean u are making folder of user or next child show folder of getPhone
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Users").child(user.getPhone());
-        Calendar calendar = Calendar.getInstance();
-        Log.e("profile", "selected Path " + imagePath.toString());
+        Calendar calendar = Calendar.getInstance(); //user time stamps ek ka matlan ek file ka naam jo ek dfa rakh dia jae wo dobara nahi aye ga        Log.e("profile", "selected Path " + imagePath.toString());
         storageReference.child(calendar.getTimeInMillis() + "").putFile(imagePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {// +"" ka matlab hai concatination
+
+                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {//file cloud par upload krne k baad ab hume os ka reference chahiye
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.e("Profile", "in OnSuccess " + uri.toString());
+                        Log.e("Profile", "in OnSuccess " + uri.toString());//jo UIrecieve hua os ko save karwaya
                         user.setImage(uri.toString());
                         saveToDatabase();
 
@@ -182,7 +182,7 @@ public class CreateUserProfile extends AppCompatActivity {
         user.setFirstName(strUserFirstName);
         user.setId(strUserPhoneNumber);
         user.setLastName(strUserLastName);
-        user.setType(0);
+        user.setType(0);              // we pass 0 en sab mai kyu k user es ko kabhi change nahi kare ga
         user.setPerHourCharge(0);
         user.setRating(0);
         FirebaseDatabase db = FirebaseDatabase.getInstance();
@@ -206,7 +206,7 @@ public class CreateUserProfile extends AppCompatActivity {
         });
     }
 
-    private boolean hasPermissions(Context c, String... permission) {
+    private boolean hasPermissions(Context c, String... permission) {     //loop chlae ga kya sab chizon ki jis jis ki access chahiye thi kya majod hai
         for (String p : permission) {
             if (ActivityCompat.checkSelfPermission(c, p) != PackageManager.PERMISSION_GRANTED) {
                 return false;
@@ -219,7 +219,7 @@ public class CreateUserProfile extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 2);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 2); //use to open gallery
     }
 
     @Override

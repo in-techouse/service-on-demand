@@ -197,9 +197,9 @@ public class GetStarted extends AppCompatActivity {
                 User user = dataSnapshot.getValue(User.class);
                 if (user == null) {
                     Intent intent = new Intent(GetStarted.this, CreateUserProfile.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("phone", InputUserPhoneNumber.getText().toString());
-                    intent.putExtras(bundle);
+                    Bundle bundle = new Bundle();// ek activity se dosri activity mai data send krne k liye
+                    bundle.putString("phone", InputUserPhoneNumber.getText().toString());//phone k naaam se ek value save karo jis mai phone no save ho ga
+                    intent.putExtras(bundle);// data rakha bundle mai bundle rakha intent mai
                     startActivity(intent);
                     finish();
                 } else {
