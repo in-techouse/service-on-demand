@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,12 +18,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.adapter.CategoryAdapter;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Category;
 import com.example.servicesondemand.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -40,7 +44,8 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
     private ValueEventListener eventListener;
     private List<Category> categories;
     private GridView gridView;
-
+    private LinearLayout loading;
+    private CategoryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +86,42 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         email.setText(user.getEmail());
 
         gridView = findViewById(R.id.gridView);
+        loading = findViewById(R.id.loading);
 
         categories = new ArrayList<>();
+        adapter = new CategoryAdapter(getApplicationContext());
+        gridView.setAdapter(adapter);
+        loadCategories();
+    }
+
+    private void loadCategories() {
+        loading.setVisibility(View.VISIBLE);
+        gridView.setVisibility(View.GONE);
+
+        eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                reference.orderByChild("name").removeEventListener(eventListener);
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Category cat = data.getValue(Category.class);
+                    if (cat != null) {
+                        categories.add(cat);
+                    }
+                }
+                adapter.setCategories(categories);
+                loading.setVisibility(View.GONE);
+                gridView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                reference.orderByChild("name").removeEventListener(eventListener);
+                loading.setVisibility(View.GONE);
+                gridView.setVisibility(View.VISIBLE);
+            }
+        };
+
+        reference.orderByChild("name").addValueEventListener(eventListener);
     }
 
     @Override
@@ -124,5 +163,13 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         }
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (eventListener != null) {
+            reference.removeEventListener(eventListener);
+        }
     }
 }
