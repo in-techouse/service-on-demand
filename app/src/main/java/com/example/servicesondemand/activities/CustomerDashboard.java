@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +18,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.Category;
 import com.example.servicesondemand.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -28,6 +36,11 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawer;
     private User user;
     private Session session;
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Categories");
+    private ValueEventListener eventListener;
+    private List<Category> categories;
+    private GridView gridView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +79,10 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         name.setText(user.getFirstName() + " " + user.getLastName());
         phone.setText(user.getPhone());
         email.setText(user.getEmail());
+
+        gridView = findViewById(R.id.gridView);
+
+        categories = new ArrayList<>();
     }
 
     @Override
@@ -74,6 +91,8 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         Log.e("Dashboard", "" + id);
         switch (id) {
             case R.id.nav_my_post: {
+                Intent intent = new Intent(CustomerDashboard.this, MyPosts.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_orders: {

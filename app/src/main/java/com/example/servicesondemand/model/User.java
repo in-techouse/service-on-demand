@@ -1,6 +1,8 @@
 package com.example.servicesondemand.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String category, email, firstName, id, image, lastName, phone;
     private int perHourCharge, type;
     private double rating;
