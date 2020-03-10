@@ -78,12 +78,18 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
                 break;
             }
             case R.id.nav_orders: {
+                Intent intent = new Intent(CustomerDashboard.this, MyOrders.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_notifications: {
+                Intent intent = new Intent(CustomerDashboard.this, MyNotifications.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_edit_profile: {
+                Intent intent = new Intent(CustomerDashboard.this, EditProfile.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_logout: {
