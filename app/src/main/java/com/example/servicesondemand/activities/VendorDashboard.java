@@ -73,12 +73,18 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
                 break;
             }
             case R.id.nav_orders: {
+                Intent intent = new Intent(VendorDashboard.this, MyOrders.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_notifications: {
+                Intent intent = new Intent(VendorDashboard.this, MyNotifications.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_edit_profile: {
+                Intent intent = new Intent(VendorDashboard.this, EditProfile.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_logout: {

@@ -20,7 +20,6 @@ import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -52,7 +51,7 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         toggle.syncState();
 
         session = new Session(CustomerDashboard.this);
-        user  = session.getUser();
+        user = session.getUser();
 
         View header = navigationView.getHeaderView(0);
         TextView name = header.findViewById(R.id.name);
@@ -60,7 +59,7 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         TextView email = header.findViewById(R.id.email);
         CircleImageView image = header.findViewById(R.id.image);
 
-        if(user.getImage() != null && user.getImage().length() > 0){
+        if (user.getImage() != null && user.getImage().length() > 0) {
             Glide.with(getApplicationContext()).load(user.getImage()).into(image);
         }
 
@@ -94,7 +93,7 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
             }
             case R.id.nav_logout: {
                 FirebaseAuth auth = FirebaseAuth.getInstance();
-                if(auth.getCurrentUser() != null)
+                if (auth.getCurrentUser() != null)
                     auth.signOut();
                 session.destroySession();
                 Intent intent = new Intent(CustomerDashboard.this, GetStarted.class);
