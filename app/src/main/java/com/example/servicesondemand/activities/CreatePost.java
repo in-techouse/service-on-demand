@@ -26,12 +26,11 @@ import java.util.Calendar;
 
 public class CreatePost extends AppCompatActivity {
     Button post;
-    private static final String TAG = "location";
+    private static final String TAG = "MakePost";
     private TextView mDisplayedDate, mDisplayedTime;
     private RelativeLayout selectDate, selectTime;
     private DatePickerDialog.OnDateSetListener mDatesetlistener;
     private TimePickerDialog.OnTimeSetListener mTimesetlistener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +85,7 @@ public class CreatePost extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                Log.d(TAG, "onDateSet: mm/dd/yy: " + month + "/" + day + "/" + year);
+                Log.e(TAG, "onDateSet: mm/dd/yy: " + month + "/" + day + "/" + year);
                 String date = month + "/" + day + "/" + year;
                 mDisplayedDate.setText(date);
             }
@@ -101,14 +100,7 @@ public class CreatePost extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 int hour = cal.get(Calendar.HOUR);
                 int minute = cal.get(Calendar.MINUTE);
-                TimePickerDialog dialog = new TimePickerDialog(CreatePost.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-
-                    }
-                }, hour, minute, false);
-//                TimePickerDialog dialog= new DatePickerDialog(CreatePost.this, android.R.style.Theme_DeviceDefault_Dialog,
-//                        mTimesetlistener ,hour,minute);
+                TimePickerDialog dialog = new TimePickerDialog(CreatePost.this, mTimesetlistener, hour, minute, false);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
             }
@@ -116,7 +108,7 @@ public class CreatePost extends AppCompatActivity {
         mTimesetlistener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                Log.d(TAG, "onTimeSet: hh:mm: " + hour + ":" + minute);
+                Log.e(TAG, "onTimeSet: hh:mm: " + hour + ":" + minute);
                 String time = hour + ":" + minute;
                 mDisplayedTime.setText(time);
             }

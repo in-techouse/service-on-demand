@@ -49,6 +49,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:text="Select Time:"
                 android:textColor="#3186c7"
                 android:textSize="14dp" />
@@ -57,6 +59,8 @@
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:textColor="#3186c7"
                 android:textSize="14dp" />
 
