@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -92,6 +93,13 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         adapter = new CategoryAdapter(getApplicationContext());
         gridView.setAdapter(adapter);
         loadCategories();
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("CustomerDashboard", "Item Clicked at postions: " + position);
+            }
+        });
     }
 
     private void loadCategories() {

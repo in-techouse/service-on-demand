@@ -11,72 +11,79 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="70dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp">
-
+            android:layout_height="wrap_content"
+            android:padding="7dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date:"
-                android:textSize="14dp"
-                android:layout_marginLeft="10dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Select Date:"
                 android:textColor="#3186c7"
-                android:id="@+id/date"/>
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textColor="#3186c7"
+                android:textSize="14dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Time:"
+                android:textColor="#3186c7"
+                android:textSize="14dp" />
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/date"
-                android:layout_marginLeft="70dp"
-                android:text="Time:"
                 android:textColor="#3186c7"
-                android:textSize="14dp"/>
-
-            <EditText
-                android:id="@+id/post_description"
-                android:layout_width="397dp"
-                android:layout_height="69dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="23dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="Decription here..."
-                android:inputType="textMultiLine"
-                android:padding="15dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Address:"
-                android:textSize="14dp"
-                android:layout_marginLeft="10dp"
-                android:textColor="#3186c7"
-                android:id="@+id/address"
-                android:layout_below="@+id/post_description"/>
-
-            <Button
-                android:id="@+id/post"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/post_description"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:background="@color/colorPrimaryDark"
-                android:text="Post"
-                android:textColor="#ffff"/>
+                android:textSize="14dp" />
 
         </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/post_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="23dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Your job description here..."
+            android:inputType="textMultiLine"
+            android:maxLength="11"
+            android:minLines="5"
+            android:padding="15dp" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/post_description"
+            android:layout_marginLeft="10dp"
+            android:text="Address:"
+            android:textColor="#3186c7"
+            android:textSize="14dp" />
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

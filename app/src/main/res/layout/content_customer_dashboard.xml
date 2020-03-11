@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="Loading your orders.\nPlease wait..."
+            android:text="Loading your categories.\nPlease wait..."
             android:textAlignment="center"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
@@ -35,11 +35,11 @@
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="13dp"
         android:gravity="center"
-        android:horizontalSpacing="10dp"
-        android:numColumns="auto_fit"
+        android:horizontalSpacing="11dp"
+        android:numColumns="3"
+        android:padding="11dp"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
+        android:verticalSpacing="11dp" />
 
 </LinearLayout>
