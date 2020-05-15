@@ -16,11 +16,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.model.Category;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -81,10 +83,15 @@ public class CreatePost extends AppCompatActivity {
                 finish();
             }
         });
+
+        AppBarLayout app_bar = findViewById(R.id.app_bar);
+        app_bar.setExpanded(true);
         // Category
         categoryTv = findViewById(R.id.category);
+        categoryTv.setFocusable(true);
+        categoryTv.setFocusableInTouchMode(true);
         categoryTv.setText("Posting for " + category.getName());
-
+        app_bar.setExpanded(true);
         // Date
         mDisplayedDate = findViewById(R.id.date);
         selectDate = findViewById(R.id.selectDate);
@@ -142,9 +149,17 @@ public class CreatePost extends AppCompatActivity {
         selectAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent it = new Intent(CreatePost.this, SelectAddress.class);
+                startActivityForResult(it, 10);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "Request Code: " + requestCode);
+        Log.e(TAG, "Result Code: " + resultCode);
     }
 
     @Override

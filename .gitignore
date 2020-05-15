@@ -17,3 +17,5 @@ app/google-services.json
 .idea
 .idea/
 /.idea
+/app/src/main/res/values/keys.xml
+/app/src/main/res/values/keys

@@ -21,6 +21,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
+            android:name=".activities.SelectAddress"
+            android:label="Select Address"
+            android:parentActivityName=".activities.CreatePost" />
+        <activity
             android:name=".activities.MyPosts"
             android:parentActivityName=".activities.CustomerDashboard"
             android:windowSoftInputMode="stateHidden" />
