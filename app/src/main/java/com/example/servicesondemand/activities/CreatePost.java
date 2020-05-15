@@ -30,8 +30,8 @@ public class CreatePost extends AppCompatActivity {
     private static final String TAG = "MakePost";
     private Category category;
     private Button post;
-    private TextView mDisplayedDate, mDisplayedTime;
-    private RelativeLayout selectDate, selectTime;
+    private TextView mDisplayedDate, mDisplayedTime, categoryTv, address;
+    private RelativeLayout selectDate, selectTime, selectAddress;
     private DatePickerDialog.OnDateSetListener mDatesetlistener;
     private TimePickerDialog.OnTimeSetListener mTimesetlistener;
 
@@ -81,9 +81,11 @@ public class CreatePost extends AppCompatActivity {
                 finish();
             }
         });
+        // Category
+        categoryTv = findViewById(R.id.category);
+        categoryTv.setText("Posting for " + category.getName());
 
-        //date
-
+        // Date
         mDisplayedDate = findViewById(R.id.date);
         selectDate = findViewById(R.id.selectDate);
         selectDate.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +113,7 @@ public class CreatePost extends AppCompatActivity {
             }
         };
 
-        //time
+        // Time
         mDisplayedTime = findViewById(R.id.time);
         selectTime = findViewById(R.id.selectTime);
         selectTime.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +136,15 @@ public class CreatePost extends AppCompatActivity {
             }
         };
 
+        // Address
+        selectAddress = findViewById(R.id.selectAddress);
+        address = findViewById(R.id.address);
+        selectAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

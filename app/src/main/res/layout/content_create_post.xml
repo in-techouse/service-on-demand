@@ -14,6 +14,17 @@
         android:orientation="vertical"
         android:paddingTop="70dp">
 
+        <TextView
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Posting for"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
         <RelativeLayout
             android:id="@+id/selectDate"
             android:layout_width="match_parent"
@@ -21,22 +32,21 @@
             android:padding="7dp">
 
             <TextView
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Select Date:"
-                android:textColor="#3186c7"
+                android:text="Select Date"
+                android:textColor="@color/colorPrimary"
                 android:textSize="14dp" />
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:textColor="#3186c7"
-                android:textSize="14dp" />
+                android:src="@drawable/calendar" />
 
         </RelativeLayout>
 
@@ -51,45 +61,70 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Select Time:"
-                android:textColor="#3186c7"
+                android:text="Select Time"
+                android:textColor="@color/colorPrimary"
                 android:textSize="14dp" />
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:textColor="#3186c7"
-                android:textSize="14dp" />
+                android:src="@drawable/time" />
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/selectAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dp">
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="3dp"
+                android:layout_toStartOf="@id/locationImg"
+                android:text="Select Address"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14dp" />
+
+            <ImageView
+                android:id="@+id/locationImg"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/location" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="Describe your precisely here."
+            android:textColor="@color/colorPrimary"
+            android:textSize="14dp" />
 
         <EditText
             android:id="@+id/post_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Your job description here..."
             android:inputType="textMultiLine"
             android:maxLength="11"
             android:minLines="5"
-            android:padding="15dp" />
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/post_description"
-            android:layout_marginLeft="10dp"
-            android:text="Address:"
-            android:textColor="#3186c7"
-            android:textSize="14dp" />
+            android:padding="3dp" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
