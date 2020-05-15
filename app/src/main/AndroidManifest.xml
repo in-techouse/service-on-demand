@@ -64,7 +64,7 @@
             android:label="@string/title_activity_create_post"
             android:parentActivityName=".activities.CustomerDashboard"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activities.GetStarted"
             android:windowSoftInputMode="stateHidden" />
