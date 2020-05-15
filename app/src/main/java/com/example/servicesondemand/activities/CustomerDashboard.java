@@ -23,7 +23,6 @@ import com.example.servicesondemand.adapter.CategoryAdapter;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Category;
 import com.example.servicesondemand.model.User;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -54,14 +53,7 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         setContentView(R.layout.activity_customer_dashboard);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent it = new Intent(CustomerDashboard.this, CreatePost.class);
-                startActivity(it);
-            }
-        });
+
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -97,7 +89,13 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("CustomerDashboard", "Item Clicked at postions: " + position);
+                Log.e("CustomerDashboard", "Item Clicked at position: " + position);
+                Intent it = new Intent(CustomerDashboard.this, CreatePost.class);
+                Bundle bundle = new Bundle();
+                Category category = categories.get(position);
+                bundle.putSerializable("category", category);
+                it.putExtras(bundle);
+                startActivity(it);
             }
         });
     }

@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="Loading your categories.\nPlease wait..."
+            android:text="Loading categories.\nPlease wait..."
             android:textAlignment="center"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>

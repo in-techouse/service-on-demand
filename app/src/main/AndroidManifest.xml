@@ -68,9 +68,6 @@
             android:name=".activities.Home"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.HomeActivity"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".activities.MainActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateHidden">

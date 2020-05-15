@@ -2,6 +2,7 @@ package com.example.servicesondemand.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,14 +20,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.model.Category;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 
 public class CreatePost extends AppCompatActivity {
-    Button post;
     private static final String TAG = "MakePost";
+    private Category category;
+    private Button post;
     private TextView mDisplayedDate, mDisplayedTime;
     private RelativeLayout selectDate, selectTime;
     private DatePickerDialog.OnDateSetListener mDatesetlistener;
@@ -38,6 +41,23 @@ public class CreatePost extends AppCompatActivity {
         setContentView(R.layout.activity_create_post);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent it = getIntent();
+
+        if (it == null) {
+            Log.e(TAG, "Intent is null");
+            return;
+        }
+        Bundle bundle = it.getExtras();
+        if (bundle == null) {
+            Log.e(TAG, "Bundle is null");
+            return;
+        }
+        category = (Category) bundle.getSerializable("category");
+        if (category == null) {
+            Log.e(TAG, "Category is null");
+            return;
+        }
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

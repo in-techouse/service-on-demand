@@ -45,8 +45,9 @@ public class CreateUserProfile extends AppCompatActivity {
             Manifest.permission.ACCESS_COARSE_LOCATION,
     };
 
-    private Button Submit;
-    private EditText InputUserFirstName, InputUserLastName, InputUserEmail, InputUserPhoneNumber;
+    private EditText InputUserFirstName;
+    private EditText InputUserLastName;
+    private EditText InputUserEmail;
     private String strUserFirstName, strUserLastName, strUserEmail, strUserPhoneNumber;
     private Helpers helpers;
     private Uri imagePath;
@@ -80,19 +81,19 @@ public class CreateUserProfile extends AppCompatActivity {
         }
 
 
-        Submit = findViewById(R.id.submit);
+        Button submit = findViewById(R.id.submit);
         InputUserFirstName = findViewById(R.id.first_name_input);
         InputUserLastName = findViewById(R.id.last_name_input);
         InputUserEmail = findViewById(R.id.email_input);
-        InputUserPhoneNumber = findViewById(R.id.phone_number_input);
+        EditText inputUserPhoneNumber = findViewById(R.id.phone_number_input);
 
-        InputUserPhoneNumber.setText(strUserPhoneNumber);
+        inputUserPhoneNumber.setText(strUserPhoneNumber);
 
         image = findViewById(R.id.image);
         image.setImageDrawable(getResources().getDrawable(R.drawable.user));
 
         helpers = new Helpers();
-        Submit.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean flag = helpers.isConnected(CreateUserProfile.this);
@@ -145,35 +146,39 @@ public class CreateUserProfile extends AppCompatActivity {
     private void uploadImage() {                       // .getReference().child("Users")that mean u are making folder of user or next child show folder of getPhone
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Users").child(user.getPhone());
         Calendar calendar = Calendar.getInstance(); //user time stamps ek ka matlan ek file ka naam jo ek dfa rakh dia jae wo dobara nahi aye ga        Log.e("profile", "selected Path " + imagePath.toString());
-        storageReference.child(calendar.getTimeInMillis() + "").putFile(imagePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {// +"" ka matlab hai concatination
-
-                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {//file cloud par upload krne k baad ab hume os ka reference chahiye
+        storageReference.child(calendar.getTimeInMillis() + "").putFile(imagePath)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(Uri uri) {
-                        Log.e("Profile", "in OnSuccess " + uri.toString());//jo UIrecieve hua os ko save karwaya
-                        user.setImage(uri.toString());
-                        saveToDatabase();
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {// +"" ka matlab hai concatination
 
+                        taskSnapshot.getMetadata().getReference().getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {//file cloud par upload krne k baad ab hume os ka reference chahiye
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        Log.e("Profile", "in OnSuccess " + uri.toString());//jo UIrecieve hua os ko save karwaya
+                                        user.setImage(uri.toString());
+                                        saveToDatabase();
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e("Profile", "Download Url: " + e.getMessage());
+                                        loadingBar.dismiss();
+                                        helpers.showError(CreateUserProfile.this, "ERROR!", "Something went wrong.\n Please try again later.");
+                                    }
+                                });
                     }
-                }).addOnFailureListener(new OnFailureListener() {
+                })
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("Profile", "Download Url: " + e.getMessage());
+                        Log.e("Profile", "Upload Image Url: " + e.getMessage());
                         loadingBar.dismiss();
                         helpers.showError(CreateUserProfile.this, "ERROR!", "Something went wrong.\n Please try again later.");
                     }
                 });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("Profile", "Upload Image Url: " + e.getMessage());
-                loadingBar.dismiss();
-                helpers.showError(CreateUserProfile.this, "ERROR!", "Something went wrong.\n Please try again later.");
-            }
-        });
     }
 
     private void saveToDatabase() {
@@ -197,13 +202,14 @@ public class CreateUserProfile extends AppCompatActivity {
                         startActivity(it);
                         finish();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                loadingBar.dismiss();
-                helpers.showError(CreateUserProfile.this, "ERROR!", "Something went wrong.\n Please try again later.");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        loadingBar.dismiss();
+                        helpers.showError(CreateUserProfile.this, "ERROR!", "Something went wrong.\n Please try again later.");
+                    }
+                });
     }
 
     private boolean hasPermissions(Context c, String... permission) {     //loop chlae ga kya sab chizon ki jis jis ki access chahiye thi kya majod hai
