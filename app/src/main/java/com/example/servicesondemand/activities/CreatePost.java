@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Category;
+import com.example.servicesondemand.model.Post;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,6 +40,7 @@ public class CreatePost extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener mDatesetlistener;
     private TimePickerDialog.OnTimeSetListener mTimesetlistener;
     private Helpers helpers;
+    private Post postObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class CreatePost extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         helpers = new Helpers();
+        postObj = new Post();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -207,6 +210,21 @@ public class CreatePost extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e(TAG, "Request Code: " + requestCode);
         Log.e(TAG, "Result Code: " + resultCode);
+        if (requestCode == 10 && resultCode == RESULT_OK) {
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                if (bundle != null) {
+                    Post p = (Post) bundle.getSerializable("result");
+                    if (p != null) {
+                        Log.e("Maps", "Location Received: " + p.getAddress());
+                        postObj.setLatitude(p.getLatitude());
+                        postObj.setLongitude(p.getLongitude());
+                        postObj.setAddress(p.getAddress());
+                        address.setText(postObj.getAddress());
+                    }
+                }
+            }
+        }
     }
 
     @Override

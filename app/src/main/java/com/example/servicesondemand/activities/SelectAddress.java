@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
+import com.example.servicesondemand.model.Post;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -56,6 +57,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
     private Marker marker;
     private Helpers helpers;
     private FusedLocationProviderClient locationProviderClient;
+    private Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
 
 
         helpers = new Helpers();
+        post = new Post();
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -221,17 +224,17 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
                                 String city = addresses.get(0).getLocality();
                                 String state = addresses.get(0).getAdminArea();
 
-//                                hall.setLatitude(location.getLatitude());
-//                                hall.setLongitude(location.getLongitude());
+                                post.setLatitude(location.getLatitude());
+                                post.setLongitude(location.getLongitude());
 
                                 String str = "";
                                 if (address != null)
-                                    str = str + " " + address;
+                                    str = address + " ";
                                 if (city != null)
-                                    str = str + " " + city;
+                                    str = str + city + " ";
                                 if (state != null)
-                                    str = str + " " + state;
-//                                hall.setLocation(str);
+                                    str = str + state;
+                                post.setAddress(str);
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 Log.e("Place", "exception: " + e.getMessage());
@@ -290,7 +293,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
     private void sendLocation() {
         Intent returnIntent = new Intent();
         Bundle bundle = new Bundle();
-//        bundle.putSerializable("result", hall);
+        bundle.putSerializable("result", post);
         returnIntent.putExtras(bundle);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
