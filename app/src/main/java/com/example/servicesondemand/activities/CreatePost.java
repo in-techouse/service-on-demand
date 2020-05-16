@@ -11,16 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Category;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,9 +34,11 @@ public class CreatePost extends AppCompatActivity {
     private Category category;
     private Button post;
     private TextView mDisplayedDate, mDisplayedTime, categoryTv, address;
+    private EditText post_description;
     private RelativeLayout selectDate, selectTime, selectAddress;
     private DatePickerDialog.OnDateSetListener mDatesetlistener;
     private TimePickerDialog.OnTimeSetListener mTimesetlistener;
+    private Helpers helpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class CreatePost extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        helpers = new Helpers();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -79,13 +83,56 @@ public class CreatePost extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(CreatePost.this, "Your booking is done...", Toast.LENGTH_SHORT).show();
-                finish();
+                boolean isConnected = helpers.isConnected(CreatePost.this);
+                if (!isConnected) {
+                    helpers.showError(CreatePost.this, "ERROR", "NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
+                    return;
+                }
+
+                String strDate = mDisplayedDate.getText().toString();
+                String strTime = mDisplayedTime.getText().toString();
+                String strAddress = address.getText().toString();
+                String strDescription = post_description.getText().toString();
+                boolean flag = true;
+                String error = "";
+
+                if (strDate.equals("Select Date")) {
+                    error = error + "Select your job date first.\n";
+                    flag = false;
+                }
+
+                if (strTime.equals("Select Time")) {
+                    error = error + "Select your job time first.\n";
+                    flag = false;
+                }
+
+                if (strAddress.equals("Select Address")) {
+                    error = error + "Select your job address first.\n";
+                    flag = false;
+                }
+
+                if (strDescription.length() < 10) {
+                    post_description.setError("Enter a valid description");
+                    flag = false;
+                }
+
+                if (error.length() > 0) {
+                    helpers.showError(CreatePost.this, "ERROR!", error);
+                }
+
+                if (flag) {
+                    // Everything is good
+                } else {
+                    // Inputs are not valid
+                }
+
             }
         });
 
         AppBarLayout app_bar = findViewById(R.id.app_bar);
         app_bar.setExpanded(true);
+
+        post_description = findViewById(R.id.post_description);
         // Category
         categoryTv = findViewById(R.id.category);
         categoryTv.setFocusable(true);

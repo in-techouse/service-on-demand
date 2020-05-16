@@ -20,10 +20,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/googleKey" />
+
         <activity
             android:name=".activities.SelectAddress"
             android:label="Select Address"
-            android:parentActivityName=".activities.CreatePost" />
+            android:parentActivityName=".activities.CreatePost"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MyPosts"
             android:parentActivityName=".activities.CustomerDashboard"
