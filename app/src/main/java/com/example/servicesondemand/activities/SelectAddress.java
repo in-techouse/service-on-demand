@@ -1,20 +1,54 @@
 package com.example.servicesondemand.activities;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class SelectAddress extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
     private MapView map;
@@ -37,16 +71,220 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
         helpers = new Helpers();
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry("PK").build();
+        autocompleteFragment.setFilter(filter);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                if (place != null) {
+                    Log.e("Place", place.getAddress() + "");
+                    Log.e("Place", "Lat: " + place.getLatLng().latitude + " Lng: " + place.getLatLng().longitude);
+//                    hall.setLocation(place.getAddress()+"");
+//                    hall.setLatitude(place.getLatLng().latitude);
+//                    hall.setLongitude(place.getLatLng().longitude);
+
+                    googleMap.clear();
+                    LatLng startingPoint = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
+                    MarkerOptions markerOptions = new MarkerOptions().position(startingPoint).title("You");
+                    googleMap.addMarker(markerOptions);
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(14).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                } else {
+                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+                }
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.e("Place", "Error:  " + status.getStatusMessage());
+                helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+            }
+        });
+
+        Button apply = findViewById(R.id.apply);
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendLocation();
+            }
+        });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap gm) {
+        googleMap = gm;
+        LatLng startingPoint = new LatLng(31.5204, 74.3587);
+        MarkerOptions markerOptions = new MarkerOptions().position(startingPoint).title("You");
+        googleMap.addMarker(markerOptions);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(14).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        enableLocation();
+    }
+
+    public void enableLocation() {
+        Log.e("Maps", "Enable Location Called");
+        if (ActivityCompat.checkSelfPermission(SelectAddress.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SelectAddress.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SelectAddress.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+        googleMap.setOnMyLocationButtonClickListener(this);
+        View locationButton = ((View) map.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp.setMargins(0, 0, 20, 0);
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
-        return false;
+        FusedLocationProviderClient current = LocationServices.getFusedLocationProviderClient(SelectAddress.this);
+
+        if (ActivityCompat.checkSelfPermission(SelectAddress.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SelectAddress.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SelectAddress.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+            return true;
+        }
+        current.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                getDeviceLocation();
+            }
+        });
+        return true;
+    }
+
+    private void getDeviceLocation() {
+        try {
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            boolean gps_enabled = false;
+            boolean network_enabled = false;
+            try {
+                gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            } catch (Exception ex) {
+            }
+
+            try {
+                network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            } catch (Exception ex) {
+            }
+
+            if (!gps_enabled && !network_enabled) {
+                // notify user
+                AlertDialog.Builder dialog = new AlertDialog.Builder(SelectAddress.this);
+                dialog.setMessage("Ops!. Your Location Service is Off.\nPlease TURN ON Your location service and try again.");
+                dialog.setPositiveButton("Let me on", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        // TODO Auto-generated method stub
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(myIntent);
+                        //get gps
+                    }
+                });
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    }
+                });
+                dialog.show();
+                return;
+            }
+
+            if (ActivityCompat.checkSelfPermission(SelectAddress.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SelectAddress.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(SelectAddress.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+                return;
+            }
+            locationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful()) {
+                        Location location = task.getResult();
+                        if (location != null) {
+                            googleMap.clear();
+                            LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
+                            marker = googleMap.addMarker(new MarkerOptions().position(me).title("You're Here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(me, 11));
+                            Log.e("Place", "Location got: " + location.getLatitude() + "-" + location.getLongitude());
+
+                            Geocoder geocoder;
+                            List<Address> addresses;
+                            geocoder = new Geocoder(SelectAddress.this, Locale.getDefault());
+
+                            try {
+                                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                                String city = addresses.get(0).getLocality();
+                                String state = addresses.get(0).getAdminArea();
+//
+//                                hall.setLatitude(location.getLatitude());
+//                                hall.setLongitude(location.getLongitude());
+
+                                String str = "";
+                                if (address != null)
+                                    str = str + " " + address;
+                                if (city != null)
+                                    str = str + " " + city;
+                                if (state != null)
+                                    str = str + " " + state;
+//                                hall.setLocation(str);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Log.e("Place", "exception: " + e.getMessage());
+                                helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+                            }
+                        }
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("Map", "Location Failure: " + e.getMessage());
+                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+
+                }
+            });
+        } catch (Exception e) {
+            Log.e("Map", "Location Exception: " + e.getMessage());
+            helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 20) {
+            enableLocation();
+        }
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onResume() {
+        super.onResume();
+        map.onResume();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        map.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        map.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        map.onLowMemory();
     }
 
     private void sendLocation() {
@@ -62,7 +300,9 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                sendLocation();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, returnIntent);
+                finish();
                 break;
             }
         }
@@ -71,7 +311,9 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onBackPressed() {
-        sendLocation();
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        finish();
     }
 
 }
