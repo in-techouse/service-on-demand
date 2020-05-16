@@ -91,17 +91,17 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
                     LatLng startingPoint = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
                     MarkerOptions markerOptions = new MarkerOptions().position(startingPoint).title("You");
                     googleMap.addMarker(markerOptions);
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(14).build();
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(16).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 } else {
-                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + " Place is null");
                 }
             }
 
             @Override
             public void onError(Status status) {
                 Log.e("Place", "Error:  " + status.getStatusMessage());
-                helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+                helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + status.getStatusMessage());
             }
         });
 
@@ -120,7 +120,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
         LatLng startingPoint = new LatLng(31.5204, 74.3587);
         MarkerOptions markerOptions = new MarkerOptions().position(startingPoint).title("You");
         googleMap.addMarker(markerOptions);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(14).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(16).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         enableLocation();
     }
@@ -208,7 +208,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
                             googleMap.clear();
                             LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
                             marker = googleMap.addMarker(new MarkerOptions().position(me).title("You're Here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(me, 11));
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
                             Log.e("Place", "Location got: " + location.getLatitude() + "-" + location.getLongitude());
 
                             Geocoder geocoder;
@@ -220,7 +220,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
                                 String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                                 String city = addresses.get(0).getLocality();
                                 String state = addresses.get(0).getAdminArea();
-//
+
 //                                hall.setLatitude(location.getLatitude());
 //                                hall.setLongitude(location.getLongitude());
 
