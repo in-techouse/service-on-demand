@@ -1,10 +1,13 @@
 package com.example.servicesondemand.activities;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,9 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
@@ -26,7 +31,6 @@ import com.example.servicesondemand.model.Category;
 import com.example.servicesondemand.model.Post;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 
@@ -76,8 +80,9 @@ public class CreatePost extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (askForPermission()) {
+                    openGallery();
+                }
             }
         });
 
@@ -205,6 +210,32 @@ public class CreatePost extends AppCompatActivity {
         });
     }
 
+    private boolean askForPermission() {
+        if (ActivityCompat.checkSelfPermission(CreatePost.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(CreatePost.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(CreatePost.this, new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 10);
+            return false;
+        }
+        return true;
+    }
+
+    public void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 2);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 10) {
+            openGallery();
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -222,6 +253,20 @@ public class CreatePost extends AppCompatActivity {
                         postObj.setAddress(p.getAddress());
                         address.setText(postObj.getAddress());
                     }
+                }
+            }
+        } else if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                if (data == null) {
+                    Log.e("profile", "data null");
+                    return;
+                }
+                Uri image = data.getData();
+                if (image != null) {
+//                    Glide.with(EditUserProfile.this).load(image).into(img);
+//                    imagePath = image;
+//                    isImage = true;
+
                 }
             }
         }

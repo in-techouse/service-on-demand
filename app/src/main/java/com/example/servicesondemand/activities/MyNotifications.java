@@ -15,7 +15,6 @@ import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Notification;
-import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -69,7 +68,7 @@ public class MyNotifications extends AppCompatActivity {
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("Case", "Data Snap Shot: " + dataSnapshot.toString());
+                Log.e("MyNotifications", "Data Snap Shot: " + dataSnapshot.toString());
                 notifications.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     Notification c = d.getValue(Notification.class);
@@ -78,13 +77,13 @@ public class MyNotifications extends AppCompatActivity {
                     }
                 }
                 Collections.reverse(notifications); // Reverse the data list, to display the latest booking on top.
-                Log.e("Case", "Data List Size: " + notifications.size());
+                Log.e("MyNotifications", "Data List Size: " + notifications.size());
                 if (notifications.size() > 0) {
-                    Log.e("Case", "If, list visible");
+                    Log.e("MyNotifications", "If, list visible");
                     notificationsList.setVisibility(View.VISIBLE);
                     noRecordFound.setVisibility(View.GONE);
                 } else {
-                    Log.e("Case", "Else, list invisible");
+                    Log.e("MyNotifications", "Else, list invisible");
                     noRecordFound.setVisibility(View.VISIBLE);
                     notificationsList.setVisibility(View.GONE);
                 }

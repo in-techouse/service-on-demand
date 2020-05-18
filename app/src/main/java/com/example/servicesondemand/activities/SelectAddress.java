@@ -29,10 +29,6 @@ import com.example.servicesondemand.model.Post;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -46,8 +42,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -75,38 +77,70 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        String apiKey = getString(R.string.googleKey);
+        Places.initialize(getApplicationContext(), apiKey);
 
-        AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry("PK").build();
-        autocompleteFragment.setFilter(filter);
+        // Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(this);
 
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                if (place != null) {
-                    Log.e("Place", place.getAddress() + "");
-                    Log.e("Place", "Lat: " + place.getLatLng().latitude + " Lng: " + place.getLatLng().longitude);
-//                    hall.setLocation(place.getAddress()+"");
-//                    hall.setLatitude(place.getLatLng().latitude);
-//                    hall.setLongitude(place.getLatLng().longitude);
-
-                    googleMap.clear();
-                    LatLng startingPoint = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
-                    MarkerOptions markerOptions = new MarkerOptions().position(startingPoint).title("You");
-                    googleMap.addMarker(markerOptions);
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(16).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                } else {
-                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + " Place is null");
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        if (autocompleteFragment != null) {
+            // Specify the types of place data to return.
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+            autocompleteFragment.setHint("Search address here, or set your current location...");
+            autocompleteFragment.setCountry("PK");
+            // Set up a PlaceSelectionListener to handle the response.
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+                    // TODO: Get info about the selected place.
+                    Log.i("SelectAddress", "Place: " + place.getName() + ", " + place.getId());
                 }
-            }
 
-            @Override
-            public void onError(Status status) {
-                Log.e("Place", "Error:  " + status.getStatusMessage());
-                helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + status.getStatusMessage());
-            }
-        });
+                @Override
+                public void onError(Status status) {
+                    // TODO: Handle the error.
+                    Log.i("SelectAddress", "An error occurred: " + status);
+                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + status.getStatusMessage());
+
+                }
+            });
+        } else {
+            helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
+        }
+//        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+//
+//        AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry("PK").build();
+//        autocompleteFragment.setFilter(filter);
+//
+//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+//            @Override
+//            public void onPlaceSelected(Place place) {
+//                if (place != null) {
+//                    Log.e("Place", place.getAddress() + "");
+//                    Log.e("Place", "Lat: " + place.getLatLng().latitude + " Lng: " + place.getLatLng().longitude);
+////                    hall.setLocation(place.getAddress()+"");
+////                    hall.setLatitude(place.getLatLng().latitude);
+////                    hall.setLongitude(place.getLatLng().longitude);
+//
+//                    googleMap.clear();
+//                    LatLng startingPoint = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
+//                    MarkerOptions markerOptions = new MarkerOptions().position(startingPoint).title("You");
+//                    googleMap.addMarker(markerOptions);
+//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(16).build();
+//                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                } else {
+//                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + " Place is null");
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//                Log.e("Place", "Error:  " + status.getStatusMessage());
+//                helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + status.getStatusMessage());
+//            }
+//        });
 
         Button apply = findViewById(R.id.apply);
         apply.setOnClickListener(new View.OnClickListener() {

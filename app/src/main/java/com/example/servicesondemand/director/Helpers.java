@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import com.example.servicesondemand.R;
 import com.shreyaspatil.MaterialDialog.MaterialDialog;
 import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
@@ -12,26 +13,24 @@ public class Helpers {
 
     public boolean isConnected(Context context) {
         boolean connected = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         connected = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
-        return  connected;
+        return connected;
     }
 
 
-
-    public void showError(Activity activity,String title, String message){
-
+    public void showError(Activity activity, String title, String message) {
         MaterialDialog mDialog = new MaterialDialog.Builder(activity)
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("OK", R.drawable.cancel, new MaterialDialog.OnClickListener() {
+                .setPositiveButton("OK", R.drawable.ok, new MaterialDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
                         dialogInterface.dismiss();
                     }
                 })
-                .setNegativeButton("CANCEL", R.drawable.ok, new MaterialDialog.OnClickListener() {
+                .setNegativeButton("CANCEL", R.drawable.cancel, new MaterialDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
                         dialogInterface.dismiss();
@@ -41,7 +40,5 @@ public class Helpers {
 
         // Show Dialog
         mDialog.show();
-
-
     }
 }

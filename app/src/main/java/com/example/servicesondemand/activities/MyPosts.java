@@ -68,7 +68,7 @@ public class MyPosts extends AppCompatActivity {
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("Case", "Data Snap Shot: " + dataSnapshot.toString());
+                Log.e("MyPosts", "Data Snap Shot: " + dataSnapshot.toString());
                 posts.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     Post c = d.getValue(Post.class);
@@ -77,13 +77,13 @@ public class MyPosts extends AppCompatActivity {
                     }
                 }
                 Collections.reverse(posts); // Reverse the data list, to display the latest booking on top.
-                Log.e("Case", "Data List Size: " + posts.size());
+                Log.e("MyPosts", "Data List Size: " + posts.size());
                 if (posts.size() > 0) {
-                    Log.e("Case", "If, list visible");
+                    Log.e("MyPosts", "If, list visible");
                     myPostsList.setVisibility(View.VISIBLE);
                     noRecordFound.setVisibility(View.GONE);
                 } else {
-                    Log.e("Case", "Else, list invisible");
+                    Log.e("MyPosts", "Else, list invisible");
                     noRecordFound.setVisibility(View.VISIBLE);
                     myPostsList.setVisibility(View.GONE);
                 }

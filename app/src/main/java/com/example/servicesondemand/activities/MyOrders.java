@@ -15,7 +15,6 @@ import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Order;
-import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -71,7 +70,7 @@ public class MyOrders extends AppCompatActivity {
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("Case", "Data Snap Shot: " + dataSnapshot.toString());
+                Log.e("MyOrders", "Data Snap Shot: " + dataSnapshot.toString());
                 orders.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     Order c = d.getValue(Order.class);
@@ -80,13 +79,13 @@ public class MyOrders extends AppCompatActivity {
                     }
                 }
                 Collections.reverse(orders); // Reverse the data list, to display the latest booking on top.
-                Log.e("Case", "Data List Size: " + orders.size());
+                Log.e("MyOrders", "Data List Size: " + orders.size());
                 if (orders.size() > 0) {
-                    Log.e("Case", "If, list visible");
+                    Log.e("MyOrders", "If, list visible");
                     ordersList.setVisibility(View.VISIBLE);
                     noRecordFound.setVisibility(View.GONE);
                 } else {
-                    Log.e("Case", "Else, list invisible");
+                    Log.e("MyOrders", "Else, list invisible");
                     noRecordFound.setVisibility(View.VISIBLE);
                     ordersList.setVisibility(View.GONE);
                 }
