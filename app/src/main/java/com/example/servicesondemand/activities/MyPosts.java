@@ -1,6 +1,7 @@
 package com.example.servicesondemand.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MyPosts extends AppCompatActivity {
@@ -66,12 +68,34 @@ public class MyPosts extends AppCompatActivity {
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                Log.e("Case", "Data Snap Shot: " + dataSnapshot.toString());
+                posts.clear(); // Remove data, to avoid duplication
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    Post c = d.getValue(Post.class);
+                    if (c != null) {
+                        posts.add(c);
+                    }
+                }
+                Collections.reverse(posts); // Reverse the data list, to display the latest booking on top.
+                Log.e("Case", "Data List Size: " + posts.size());
+                if (posts.size() > 0) {
+                    Log.e("Case", "If, list visible");
+                    myPostsList.setVisibility(View.VISIBLE);
+                    noRecordFound.setVisibility(View.GONE);
+                } else {
+                    Log.e("Case", "Else, list invisible");
+                    noRecordFound.setVisibility(View.VISIBLE);
+                    myPostsList.setVisibility(View.GONE);
+                }
+                loading.setVisibility(View.GONE);
+//                adapter.setData(posts);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                loading.setVisibility(View.GONE);
+                noRecordFound.setVisibility(View.VISIBLE);
+                myPostsList.setVisibility(View.GONE);
             }
         };
     }

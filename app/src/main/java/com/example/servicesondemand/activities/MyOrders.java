@@ -1,6 +1,7 @@
 package com.example.servicesondemand.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,6 +15,7 @@ import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Order;
+import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MyOrders extends AppCompatActivity {
@@ -68,12 +71,34 @@ public class MyOrders extends AppCompatActivity {
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                Log.e("Case", "Data Snap Shot: " + dataSnapshot.toString());
+                orders.clear(); // Remove data, to avoid duplication
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    Order c = d.getValue(Order.class);
+                    if (c != null) {
+                        orders.add(c);
+                    }
+                }
+                Collections.reverse(orders); // Reverse the data list, to display the latest booking on top.
+                Log.e("Case", "Data List Size: " + orders.size());
+                if (orders.size() > 0) {
+                    Log.e("Case", "If, list visible");
+                    ordersList.setVisibility(View.VISIBLE);
+                    noRecordFound.setVisibility(View.GONE);
+                } else {
+                    Log.e("Case", "Else, list invisible");
+                    noRecordFound.setVisibility(View.VISIBLE);
+                    ordersList.setVisibility(View.GONE);
+                }
+                loading.setVisibility(View.GONE);
+//                adapter.setData(orders);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                loading.setVisibility(View.GONE);
+                noRecordFound.setVisibility(View.VISIBLE);
+                ordersList.setVisibility(View.GONE);
             }
         };
     }
