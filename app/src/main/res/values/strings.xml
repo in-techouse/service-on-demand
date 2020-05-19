@@ -19,6 +19,6 @@
     <string name="enter_the_otp_code_you_received">Enter the OTP Code you received</string>
     <string name="resend_otp">RESEND OTP</string>
     <string name="title_activity_create_user_profile">Create Profile</string>
-    <string name="title_activity_edit_profile">EditProfile</string>
+    <string name="title_activity_edit_profile">Edit Profile</string>
     <string name="apply">APPLY</string>
 </resources>

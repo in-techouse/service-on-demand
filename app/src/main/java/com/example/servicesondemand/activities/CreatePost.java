@@ -25,6 +25,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Category;
@@ -32,7 +36,10 @@ import com.example.servicesondemand.model.Post;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class CreatePost extends AppCompatActivity {
     private static final String TAG = "MakePost";
@@ -45,6 +52,8 @@ public class CreatePost extends AppCompatActivity {
     private TimePickerDialog.OnTimeSetListener mTimesetlistener;
     private Helpers helpers;
     private Post postObj;
+    private SliderLayout slider;
+    private List<Uri> sliderImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +217,29 @@ public class CreatePost extends AppCompatActivity {
                 startActivityForResult(it, 10);
             }
         });
+
+        slider = findViewById(R.id.slider);
+
+//        HashMap<String, String> url_maps = new HashMap<>();
+//        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+//        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+//        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
+//        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+//
+//        for (String name : url_maps.keySet()) {
+//            TextSliderView textSliderView = new TextSliderView(this);
+//            // initialize a SliderLayout
+//            textSliderView
+//                    .description(name)
+//                    .image(url_maps.get(name))
+//                    .setScaleType(BaseSliderView.ScaleType.Fit);
+//
+//            slider.addSlider(textSliderView);
+//        }
+        slider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        slider.setCustomAnimation(new DescriptionAnimation());
+        slider.setDuration(2000);
     }
 
     private boolean askForPermission() {
@@ -234,7 +266,6 @@ public class CreatePost extends AppCompatActivity {
             openGallery();
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -263,6 +294,18 @@ public class CreatePost extends AppCompatActivity {
                 }
                 Uri image = data.getData();
                 if (image != null) {
+                    TextSliderView textSliderView = new TextSliderView(this);
+                    File file = new File(image.getPath());
+                    if (file.exists()) {
+//                        textSliderView.description("").image(file).sc
+                        // initialize a SliderLayout
+                        textSliderView
+                                .description("")
+                                .image(file)
+                                .setScaleType(BaseSliderView.ScaleType.Fit);
+
+                        slider.addSlider(textSliderView);
+                    }
 //                    Glide.with(EditUserProfile.this).load(image).into(img);
 //                    imagePath = image;
 //                    isImage = true;

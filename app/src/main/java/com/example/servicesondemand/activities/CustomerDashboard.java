@@ -103,7 +103,6 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
     private void loadCategories() {
         loading.setVisibility(View.VISIBLE);
         gridView.setVisibility(View.GONE);
-
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -126,14 +125,12 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
                 gridView.setVisibility(View.VISIBLE);
             }
         };
-
         reference.orderByChild("name").addValueEventListener(eventListener);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        Log.e("Dashboard", "" + id);
         switch (id) {
             case R.id.nav_my_post: {
                 Intent intent = new Intent(CustomerDashboard.this, MyPosts.class);

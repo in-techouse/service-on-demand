@@ -49,4 +49,17 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:padding="11dp"
+        android:text="UPDATE PROFILE"
+        android:textAllCaps="true"
+        android:textColor="@color/colorWhite"
+        android:textSize="15sp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

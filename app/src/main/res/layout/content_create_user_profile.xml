@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:paddingEnd="20dp"
+        android:paddingBottom="40dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -73,7 +74,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp">
 
-
             <EditText
                 android:id="@+id/phone_number_input"
                 android:layout_width="match_parent"
@@ -87,26 +87,6 @@
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/submit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorPrimary"
-                android:padding="11dp"
-                android:text="submit"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/colorWhite"
-                android:textSize="15sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
