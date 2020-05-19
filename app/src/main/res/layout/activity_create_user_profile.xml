@@ -30,6 +30,7 @@
                 android:layout_height="@dimen/app_bar_height"
                 android:scaleType="fitXY" />
 
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
