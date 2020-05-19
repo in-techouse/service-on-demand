@@ -246,7 +246,7 @@ public class CreatePost extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(CreatePost.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(CreatePost.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(CreatePost.this, new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 10);
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             return false;
         }
         return true;
@@ -262,7 +262,7 @@ public class CreatePost extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 10) {
+        if (requestCode == 1) {
             openGallery();
         }
     }
@@ -278,7 +278,7 @@ public class CreatePost extends AppCompatActivity {
                 if (bundle != null) {
                     Post p = (Post) bundle.getSerializable("result");
                     if (p != null) {
-                        Log.e("Maps", "Location Received: " + p.getAddress());
+                        Log.e(TAG, "Location Received: " + p.getAddress());
                         postObj.setLatitude(p.getLatitude());
                         postObj.setLongitude(p.getLongitude());
                         postObj.setAddress(p.getAddress());
@@ -287,29 +287,31 @@ public class CreatePost extends AppCompatActivity {
                 }
             }
         } else if (requestCode == 2) {
+            Log.e(TAG, "Request Code Matched");
             if (resultCode == RESULT_OK) {
+                Log.e(TAG, "Result Code Matched");
                 if (data == null) {
-                    Log.e("profile", "data null");
+                    Log.e(TAG, "Data null");
                     return;
                 }
-                Uri image = data.getData();
-                if (image != null) {
+                Uri imageFile = data.getData();
+                if (imageFile != null) {
+                    Log.e(TAG, "Image is not null");
                     TextSliderView textSliderView = new TextSliderView(this);
-                    File file = new File(image.getPath());
-                    if (file.exists()) {
-//                        textSliderView.description("").image(file).sc
-                        // initialize a SliderLayout
+                    Log.e(TAG, "Image path: " + imageFile.getPath());
+                    File file = new File(imageFile.getPath());
+//                    if (file.exists()) {
+//                        Log.e(TAG, "File exists");
                         textSliderView
                                 .description("")
                                 .image(file)
                                 .setScaleType(BaseSliderView.ScaleType.Fit);
 
                         slider.addSlider(textSliderView);
-                    }
-//                    Glide.with(EditUserProfile.this).load(image).into(img);
-//                    imagePath = image;
-//                    isImage = true;
-
+//                    }
+//                    else{
+//                        Log.e(TAG, "File doesn't exists");
+//                    }
                 }
             }
         }

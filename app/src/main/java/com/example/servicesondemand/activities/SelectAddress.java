@@ -109,38 +109,6 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
         } else {
             helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later.");
         }
-//        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-//
-//        AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry("PK").build();
-//        autocompleteFragment.setFilter(filter);
-//
-//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-//            @Override
-//            public void onPlaceSelected(Place place) {
-//                if (place != null) {
-//                    Log.e("Place", place.getAddress() + "");
-//                    Log.e("Place", "Lat: " + place.getLatLng().latitude + " Lng: " + place.getLatLng().longitude);
-////                    hall.setLocation(place.getAddress()+"");
-////                    hall.setLatitude(place.getLatLng().latitude);
-////                    hall.setLongitude(place.getLatLng().longitude);
-//
-//                    googleMap.clear();
-//                    LatLng startingPoint = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
-//                    MarkerOptions markerOptions = new MarkerOptions().position(startingPoint).title("You");
-//                    googleMap.addMarker(markerOptions);
-//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(startingPoint).zoom(16).build();
-//                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                } else {
-//                    helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + " Place is null");
-//                }
-//            }
-//
-//            @Override
-//            public void onError(Status status) {
-//                Log.e("Place", "Error:  " + status.getStatusMessage());
-//                helpers.showError(SelectAddress.this, "ERROR!", "Something went wrong.\nPlease try again later." + status.getStatusMessage());
-//            }
-//        });
 
         Button apply = findViewById(R.id.apply);
         apply.setOnClickListener(new View.OnClickListener() {
@@ -295,7 +263,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 20) {
+        if (requestCode == 10) {
             enableLocation();
         }
     }
