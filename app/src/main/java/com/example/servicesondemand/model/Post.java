@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Post implements Serializable {
-    private String id, userId, workerId, status, date, time, address, description;
+    private String id, userId, workerId, status, date, time, address, description, category;
     private List<String> images;
     private double latitude, longitude;
 
     public Post() {
     }
 
-    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, List<String> images, double latitude, double longitude) {
+    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, List<String> images, double latitude, double longitude) {
         this.id = id;
         this.userId = userId;
         this.workerId = workerId;
@@ -20,9 +20,18 @@ public class Post implements Serializable {
         this.time = time;
         this.address = address;
         this.description = description;
+        this.category = category;
         this.images = images;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getId() {

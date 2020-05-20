@@ -125,7 +125,6 @@
             android:gravity="start|top"
             android:hint="Your job description here..."
             android:inputType="textMultiLine"
-            android:maxLength="11"
             android:minLines="5"
             android:padding="3dp" />
 

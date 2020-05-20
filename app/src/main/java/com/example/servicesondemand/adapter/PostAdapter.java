@@ -8,10 +8,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicesondemand.model.Post;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
     private List<Post> data;
+
+    public PostAdapter() {
+        data = new ArrayList<>();
+    }
+
+    public void setData(List<Post> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public PostHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -25,10 +36,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return data.size();
     }
 
-    class PostHolder extends RecyclerView.ViewHolder{
+    class PostHolder extends RecyclerView.ViewHolder {
 
         public PostHolder(@NonNull View itemView) {
             super(itemView);

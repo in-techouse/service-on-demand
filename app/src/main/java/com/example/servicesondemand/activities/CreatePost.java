@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -31,12 +32,20 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
+import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Category;
 import com.example.servicesondemand.model.Post;
+import com.example.servicesondemand.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -53,7 +62,10 @@ public class CreatePost extends AppCompatActivity {
     private Helpers helpers;
     private Post postObj;
     private SliderLayout slider;
-    private List<Uri> sliderImages = new ArrayList<>();
+    private ProgressBar progress;
+    private List<String> sliderImages = new ArrayList<>();
+    private Session session;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +96,11 @@ public class CreatePost extends AppCompatActivity {
 
         helpers = new Helpers();
         postObj = new Post();
+        session = new Session(getApplicationContext());
+        user = session.getUser();
+        postObj.setCategory(category.getName());
+        postObj.setStatus("Posted");
+        postObj.setWorkerId("");
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +111,9 @@ public class CreatePost extends AppCompatActivity {
                 }
             }
         });
+
+        progress = findViewById(R.id.progress);
+        progress.setVisibility(View.GONE);
 
 
         post = findViewById(R.id.post);
@@ -110,6 +130,9 @@ public class CreatePost extends AppCompatActivity {
                 String strTime = mDisplayedTime.getText().toString();
                 String strAddress = address.getText().toString();
                 String strDescription = post_description.getText().toString();
+                postObj.setDate(strDate);
+                postObj.setTime(strTime);
+                postObj.setDescription(strDescription);
                 boolean flag = true;
                 String error = "";
 
@@ -133,16 +156,19 @@ public class CreatePost extends AppCompatActivity {
                     flag = false;
                 }
 
+                if (sliderImages.size() < 1) {
+                    error = error + "Select at least one image for the job you want to post.\n";
+                    flag = false;
+                }
+
                 if (error.length() > 0) {
                     helpers.showError(CreatePost.this, "ERROR!", error);
                 }
 
                 if (flag) {
                     // Everything is good
-                } else {
-                    // Inputs are not valid
+                    saveJob();
                 }
-
             }
         });
 
@@ -220,26 +246,38 @@ public class CreatePost extends AppCompatActivity {
 
         slider = findViewById(R.id.slider);
 
-//        HashMap<String, String> url_maps = new HashMap<>();
-//        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-//        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-//        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-//        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-//
-//        for (String name : url_maps.keySet()) {
-//            TextSliderView textSliderView = new TextSliderView(this);
-//            // initialize a SliderLayout
-//            textSliderView
-//                    .description(name)
-//                    .image(url_maps.get(name))
-//                    .setScaleType(BaseSliderView.ScaleType.Fit);
-//
-//            slider.addSlider(textSliderView);
-//        }
         slider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         slider.setCustomAnimation(new DescriptionAnimation());
         slider.setDuration(2000);
+    }
+
+    private void saveJob() {
+        progress.setVisibility(View.VISIBLE);
+        post.setVisibility(View.GONE);
+        postObj.setImages(sliderImages);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Jobs");
+        String id = reference.push().getKey();
+        postObj.setId(id);
+        postObj.setUserId(user.getId());
+        reference.child(postObj.getId()).setValue(postObj)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        progress.setVisibility(View.GONE);
+                        post.setVisibility(View.VISIBLE);
+                        helpers.showSuccess(CreatePost.this, "JOB POSTED!", "Your job has been posted successfully.");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progress.setVisibility(View.GONE);
+                        post.setVisibility(View.VISIBLE);
+                        helpers.showError(CreatePost.this, "ERROR!", "Job not posted.\nSomething went wrong.\nPlease try again later,");
+                    }
+                });
     }
 
     private boolean askForPermission() {
@@ -287,34 +325,58 @@ public class CreatePost extends AppCompatActivity {
                 }
             }
         } else if (requestCode == 2) {
-            Log.e(TAG, "Request Code Matched");
             if (resultCode == RESULT_OK) {
-                Log.e(TAG, "Result Code Matched");
                 if (data == null) {
-                    Log.e(TAG, "Data null");
                     return;
                 }
                 Uri imageFile = data.getData();
                 if (imageFile != null) {
-                    Log.e(TAG, "Image is not null");
-                    TextSliderView textSliderView = new TextSliderView(this);
-                    Log.e(TAG, "Image path: " + imageFile.getPath());
-                    File file = new File(imageFile.getPath());
-//                    if (file.exists()) {
-//                        Log.e(TAG, "File exists");
-                        textSliderView
-                                .description("")
-                                .image(file)
-                                .setScaleType(BaseSliderView.ScaleType.Fit);
-
-                        slider.addSlider(textSliderView);
-//                    }
-//                    else{
-//                        Log.e(TAG, "File doesn't exists");
-//                    }
+                    uploadImage(imageFile);
                 }
             }
         }
+    }
+
+    private void uploadImage(Uri image) {
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Jobs").child(user.getId());
+        Calendar calendar = Calendar.getInstance();
+        storageReference.child(calendar.getTimeInMillis() + "").putFile(image)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        if (taskSnapshot.getMetadata() != null && taskSnapshot.getMetadata().getReference() != null) {
+                            taskSnapshot.getMetadata().getReference().getDownloadUrl()
+                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            Log.e(TAG, "in OnSuccess " + uri.toString());
+                                            TextSliderView textSliderView = new TextSliderView(CreatePost.this);
+                                            textSliderView
+                                                    .description("")
+                                                    .image(uri.toString())
+                                                    .setScaleType(BaseSliderView.ScaleType.Fit);
+
+                                            slider.addSlider(textSliderView);
+                                            sliderImages.add(uri.toString());
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e(TAG, "Download Url: " + e.getMessage());
+                                            helpers.showError(CreatePost.this, "ERROR!", "Image ot added.\nPlease select your image again.");
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Upload Image Failed: " + e.getMessage());
+                        helpers.showError(CreatePost.this, "ERROR!", "Image ot added.\nPlease select your image again.");
+                    }
+                });
     }
 
     @Override
