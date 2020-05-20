@@ -50,13 +50,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
         try {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date d = format.parse(post.getDate());
-            String formattedDate = new SimpleDateFormat("EEE, MM-yyyy").format(d);
+            String formattedDate = new SimpleDateFormat("EEE, dd/MM/yyyy").format(d);
             holder.date.setText(formattedDate);
         } catch (Exception e) {
             holder.date.setText(post.getDate());
         }
         holder.time.setText(post.getTime());
-        holder.address.setText(post.getAddress());
 
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,17 +72,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     class PostHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView category, date, time, address;
+        TextView category, date, time;
         CardView mainCard;
 
-        public PostHolder(@NonNull View itemView) {
+        PostHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
             category = itemView.findViewById(R.id.category);
             date = itemView.findViewById(R.id.date);
             time = itemView.findViewById(R.id.time);
             mainCard = itemView.findViewById(R.id.mainCard);
-            address = itemView.findViewById(R.id.address);
         }
     }
 }

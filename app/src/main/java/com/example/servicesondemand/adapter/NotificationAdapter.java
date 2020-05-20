@@ -44,7 +44,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     class NotificationHolder extends RecyclerView.ViewHolder {
 
-        public NotificationHolder(@NonNull View itemView) {
+        NotificationHolder(@NonNull View itemView) {
             super(itemView);
         }
     }
