@@ -50,7 +50,7 @@ public class MyPosts extends AppCompatActivity {
         noRecordFound = findViewById(R.id.noRecordFound);
 
         myPostsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new PostAdapter();
+        adapter = new PostAdapter(getApplicationContext());
         myPostsList.setAdapter(adapter);
 
         session = new Session(getApplicationContext());

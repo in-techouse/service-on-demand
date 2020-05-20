@@ -51,7 +51,7 @@ public class MyOrders extends AppCompatActivity {
         noRecordFound = findViewById(R.id.noRecordFound);
 
         ordersList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new PostAdapter();
+        adapter = new PostAdapter(getApplicationContext());
         ordersList.setAdapter(adapter);
 
         session = new Session(getApplicationContext());
