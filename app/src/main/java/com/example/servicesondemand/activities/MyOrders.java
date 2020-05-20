@@ -9,12 +9,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.adapter.PostAdapter;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
-import com.example.servicesondemand.model.Order;
+import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,8 +38,8 @@ public class MyOrders extends AppCompatActivity {
     private User user;
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Orders");
     private ValueEventListener eventListener;
-    private List<Order> orders;
-
+    private List<Post> orders;
+    private PostAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,10 @@ public class MyOrders extends AppCompatActivity {
         ordersList = findViewById(R.id.ordersList);
         loading = findViewById(R.id.loading);
         noRecordFound = findViewById(R.id.noRecordFound);
+
+        ordersList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new PostAdapter();
+        ordersList.setAdapter(adapter);
 
         session = new Session(getApplicationContext());
 
@@ -73,7 +79,7 @@ public class MyOrders extends AppCompatActivity {
                 Log.e("MyOrders", "Data Snap Shot: " + dataSnapshot.toString());
                 orders.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Order c = d.getValue(Order.class);
+                    Post c = d.getValue(Post.class);
                     if (c != null) {
                         orders.add(c);
                     }
@@ -90,7 +96,7 @@ public class MyOrders extends AppCompatActivity {
                     ordersList.setVisibility(View.GONE);
                 }
                 loading.setVisibility(View.GONE);
-//                adapter.setData(orders);
+                adapter.setData(orders);
             }
 
             @Override
@@ -100,6 +106,16 @@ public class MyOrders extends AppCompatActivity {
                 ordersList.setVisibility(View.GONE);
             }
         };
+
+        reference.orderByChild("userId").equalTo(user.getId()).addValueEventListener(eventListener);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (eventListener != null)
+            reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(eventListener);
     }
 
     @Override

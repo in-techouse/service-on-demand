@@ -52,11 +52,11 @@ import java.util.List;
 
 public class CreatePost extends AppCompatActivity {
     private static final String TAG = "MakePost";
-    private Category category;
     private Button post;
-    private TextView mDisplayedDate, mDisplayedTime, categoryTv, address;
+    private TextView mDisplayedDate;
+    private TextView mDisplayedTime;
+    private TextView address;
     private EditText post_description;
-    private RelativeLayout selectDate, selectTime, selectAddress;
     private DatePickerDialog.OnDateSetListener mDatesetlistener;
     private TimePickerDialog.OnTimeSetListener mTimesetlistener;
     private Helpers helpers;
@@ -64,7 +64,6 @@ public class CreatePost extends AppCompatActivity {
     private SliderLayout slider;
     private ProgressBar progress;
     private List<String> sliderImages = new ArrayList<>();
-    private Session session;
     private User user;
 
     @Override
@@ -85,7 +84,7 @@ public class CreatePost extends AppCompatActivity {
             Log.e(TAG, "Bundle is null");
             return;
         }
-        category = (Category) bundle.getSerializable("category");
+        Category category = (Category) bundle.getSerializable("category");
         if (category == null) {
             Log.e(TAG, "Category is null");
             return;
@@ -96,7 +95,7 @@ public class CreatePost extends AppCompatActivity {
 
         helpers = new Helpers();
         postObj = new Post();
-        session = new Session(getApplicationContext());
+        Session session = new Session(getApplicationContext());
         user = session.getUser();
         postObj.setCategory(category.getName());
         postObj.setStatus("Posted");
@@ -177,14 +176,14 @@ public class CreatePost extends AppCompatActivity {
 
         post_description = findViewById(R.id.post_description);
         // Category
-        categoryTv = findViewById(R.id.category);
+        TextView categoryTv = findViewById(R.id.category);
         categoryTv.setFocusable(true);
         categoryTv.setFocusableInTouchMode(true);
         categoryTv.setText("Posting for " + category.getName());
         app_bar.setExpanded(true);
         // Date
         mDisplayedDate = findViewById(R.id.date);
-        selectDate = findViewById(R.id.selectDate);
+        RelativeLayout selectDate = findViewById(R.id.selectDate);
         selectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,7 +211,7 @@ public class CreatePost extends AppCompatActivity {
 
         // Time
         mDisplayedTime = findViewById(R.id.time);
-        selectTime = findViewById(R.id.selectTime);
+        RelativeLayout selectTime = findViewById(R.id.selectTime);
         selectTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -234,7 +233,7 @@ public class CreatePost extends AppCompatActivity {
         };
 
         // Address
-        selectAddress = findViewById(R.id.selectAddress);
+        RelativeLayout selectAddress = findViewById(R.id.selectAddress);
         address = findViewById(R.id.address);
         selectAddress.setOnClickListener(new View.OnClickListener() {
             @Override

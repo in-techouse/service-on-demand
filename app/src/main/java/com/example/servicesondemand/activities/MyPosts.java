@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.adapter.PostAdapter;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Post;
@@ -33,9 +35,10 @@ public class MyPosts extends AppCompatActivity {
     private Helpers helpers;
     private Session session;
     private User user;
-    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Posts");
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Jobs");
     private ValueEventListener eventListener;
     private List<Post> posts;
+    private PostAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,10 @@ public class MyPosts extends AppCompatActivity {
         myPostsList = findViewById(R.id.myPostsList);
         loading = findViewById(R.id.loading);
         noRecordFound = findViewById(R.id.noRecordFound);
+
+        myPostsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new PostAdapter();
+        myPostsList.setAdapter(adapter);
 
         session = new Session(getApplicationContext());
 
@@ -63,7 +70,6 @@ public class MyPosts extends AppCompatActivity {
         myPostsList.setVisibility(View.GONE);
         noRecordFound.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
-
 
         eventListener = new ValueEventListener() {
             @Override
@@ -88,7 +94,7 @@ public class MyPosts extends AppCompatActivity {
                     myPostsList.setVisibility(View.GONE);
                 }
                 loading.setVisibility(View.GONE);
-//                adapter.setData(posts);
+                adapter.setData(posts);
             }
 
             @Override
@@ -98,6 +104,15 @@ public class MyPosts extends AppCompatActivity {
                 myPostsList.setVisibility(View.GONE);
             }
         };
+
+        reference.orderByChild("userId").equalTo(user.getId()).addValueEventListener(eventListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (eventListener != null)
+            reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(eventListener);
     }
 
     @Override
