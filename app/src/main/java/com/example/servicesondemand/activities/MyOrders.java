@@ -34,9 +34,8 @@ public class MyOrders extends AppCompatActivity {
     private LinearLayout loading;
     private TextView noRecordFound;
     private Helpers helpers;
-    private Session session;
     private User user;
-    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Orders");
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Jobs");
     private ValueEventListener eventListener;
     private List<Post> orders;
     private PostAdapter adapter;
@@ -54,7 +53,7 @@ public class MyOrders extends AppCompatActivity {
         adapter = new PostAdapter(getApplicationContext());
         ordersList.setAdapter(adapter);
 
-        session = new Session(getApplicationContext());
+        Session session = new Session(getApplicationContext());
 
         user = session.getUser();
         helpers = new Helpers();

@@ -32,6 +32,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MyPosts"
+            android:label="My Posts"
             android:parentActivityName=".activities.CustomerDashboard"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -42,10 +43,12 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MyNotifications"
+            android:label="My Notifications"
             android:parentActivityName=".activities.CustomerDashboard"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MyOrders"
+            android:label="My Orders"
             android:parentActivityName=".activities.CustomerDashboard"
             android:windowSoftInputMode="stateHidden" />
         <activity

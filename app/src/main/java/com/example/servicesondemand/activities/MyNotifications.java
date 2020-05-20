@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.adapter.NotificationAdapter;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Notification;
@@ -36,6 +38,7 @@ public class MyNotifications extends AppCompatActivity {
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Notifications");
     private ValueEventListener eventListener;
     private List<Notification> notifications;
+    private NotificationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,10 @@ public class MyNotifications extends AppCompatActivity {
         noRecordFound = findViewById(R.id.noRecordFound);
 
         session = new Session(getApplicationContext());
+
+        notificationsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new NotificationAdapter();
+        notificationsList.setAdapter(adapter);
 
         user = session.getUser();
         helpers = new Helpers();
@@ -88,7 +95,7 @@ public class MyNotifications extends AppCompatActivity {
                     notificationsList.setVisibility(View.GONE);
                 }
                 loading.setVisibility(View.GONE);
-//
+                adapter.setData(notifications);
             }
 
             @Override
@@ -96,9 +103,17 @@ public class MyNotifications extends AppCompatActivity {
                 loading.setVisibility(View.GONE);
                 noRecordFound.setVisibility(View.VISIBLE);
                 notificationsList.setVisibility(View.GONE);
-
             }
         };
+
+        reference.orderByChild("userId").equalTo(user.getId()).addValueEventListener(eventListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (eventListener != null)
+            reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(eventListener);
     }
 
     @Override

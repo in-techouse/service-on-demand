@@ -33,7 +33,6 @@ public class MyPosts extends AppCompatActivity {
     private LinearLayout loading;
     private TextView noRecordFound;
     private Helpers helpers;
-    private Session session;
     private User user;
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Jobs");
     private ValueEventListener eventListener;
@@ -53,7 +52,7 @@ public class MyPosts extends AppCompatActivity {
         adapter = new PostAdapter(getApplicationContext());
         myPostsList.setAdapter(adapter);
 
-        session = new Session(getApplicationContext());
+        Session session = new Session(getApplicationContext());
 
         user = session.getUser();
         helpers = new Helpers();

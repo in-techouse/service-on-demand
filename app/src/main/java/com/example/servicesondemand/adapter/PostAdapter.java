@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +43,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
     public void onBindViewHolder(@NonNull PostHolder holder, int position) {
         final Post post = data.get(position);
         Glide.with(context).load(post.getImages().get(0)).into(holder.image);
+        holder.category.setText(post.getCategory());
+        holder.date.setText(post.getDate());
     }
 
     @Override
@@ -51,10 +54,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     class PostHolder extends RecyclerView.ViewHolder {
         ImageView image;
+        TextView category, date;
 
         public PostHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
+            category = itemView.findViewById(R.id.category);
+            date = itemView.findViewById(R.id.date);
         }
     }
 }
