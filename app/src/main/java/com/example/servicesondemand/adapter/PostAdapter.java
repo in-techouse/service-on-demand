@@ -1,6 +1,8 @@
 package com.example.servicesondemand.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.activities.PostDetail;
 import com.example.servicesondemand.model.Post;
 
 import java.text.SimpleDateFormat;
@@ -56,11 +59,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
             holder.date.setText(post.getDate());
         }
         holder.time.setText(post.getTime());
+        holder.offers.setText(post.getOffers().size() + "");
 
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent it = new Intent(context, PostDetail.class);
+                it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("post", post);
+                it.putExtras(bundle);
+                context.startActivity(it);
             }
         });
     }
@@ -72,7 +81,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     class PostHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView category, date, time;
+        TextView category, date, time, offers;
         CardView mainCard;
 
         PostHolder(@NonNull View itemView) {
@@ -81,6 +90,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
             category = itemView.findViewById(R.id.category);
             date = itemView.findViewById(R.id.date);
             time = itemView.findViewById(R.id.time);
+            offers = itemView.findViewById(R.id.offers);
             mainCard = itemView.findViewById(R.id.mainCard);
         }
     }

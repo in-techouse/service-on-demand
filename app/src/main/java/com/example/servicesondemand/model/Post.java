@@ -1,17 +1,21 @@
 package com.example.servicesondemand.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Post implements Serializable {
     private String id, userId, workerId, status, date, time, address, description, category;
-    private List<String> images;
     private double latitude, longitude;
+    private List<Offers> offers;
+    private List<String> images;
 
     public Post() {
+        offers = new ArrayList<>();
+        images = new ArrayList<>();
     }
 
-    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, List<String> images, double latitude, double longitude) {
+    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, double latitude, double longitude, List<Offers> offers, List<String> images) {
         this.id = id;
         this.userId = userId;
         this.workerId = workerId;
@@ -21,9 +25,18 @@ public class Post implements Serializable {
         this.address = address;
         this.description = description;
         this.category = category;
-        this.images = images;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.offers = offers;
+        this.images = images;
+    }
+
+    public List<Offers> getOffers() {
+        return offers;
+    }
+
+    public void setOffers(List<Offers> offers) {
+        this.offers = offers;
     }
 
     public String getCategory() {

@@ -56,7 +56,6 @@ import java.util.Locale;
 public class SelectAddress extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
     private MapView map;
     private GoogleMap googleMap;
-    private Marker marker;
     private Helpers helpers;
     private FusedLocationProviderClient locationProviderClient;
     private Post post;
@@ -70,7 +69,6 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
         map.onCreate(savedInstanceState);
         map.onResume(); // needed to get the map to display immediately
         map.getMapAsync(this);
-
 
         helpers = new Helpers();
         post = new Post();
@@ -212,7 +210,7 @@ public class SelectAddress extends AppCompatActivity implements OnMapReadyCallba
                         if (location != null) {
                             googleMap.clear();
                             LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
-                            marker = googleMap.addMarker(new MarkerOptions().position(me).title("You're Here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                            googleMap.addMarker(new MarkerOptions().position(me).title("You're Here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
                             Log.e("Place", "Location got: " + location.getLatitude() + "-" + location.getLongitude());
 

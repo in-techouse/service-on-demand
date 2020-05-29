@@ -46,8 +46,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class CreatePost extends AppCompatActivity {
@@ -201,11 +203,19 @@ public class CreatePost extends AppCompatActivity {
 
         mDatesetlistener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                Log.e(TAG, "onDateSet: mm/dd/yy: " + month + "/" + day + "/" + year);
-                String date = month + "/" + day + "/" + year;
-                mDisplayedDate.setText(date);
+            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                try {
+                    month = month + 1;
+                    Log.e(TAG, "onDateSet: mm/dd/yy: " + month + "/" + dayOfMonth + "/" + year);
+                    String strDate = month + "/" + dayOfMonth + "/" + year;
+                    mDisplayedDate.setText(strDate);
+                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                    Date d = format.parse(strDate);
+                    strDate = new SimpleDateFormat("EEE, dd, MMM-yyyy").format(d);
+                    mDisplayedDate.setText(strDate);
+                } catch (Exception e) {
+                    Log.e(TAG, "Date parsing Exception: " + e.getMessage());
+                }
             }
         };
 
@@ -225,10 +235,20 @@ public class CreatePost extends AppCompatActivity {
         });
         mTimesetlistener = new TimePickerDialog.OnTimeSetListener() {
             @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                Log.e(TAG, "onTimeSet: hh:mm: " + hour + ":" + minute);
-                String time = hour + ":" + minute;
-                mDisplayedTime.setText(time);
+            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+                try {
+                    Log.e(TAG, "onTimeSet: hh:mm: " + hourOfDay + ":" + minute);
+                    String strTime = hourOfDay + ":" + minute;
+                    mDisplayedTime.setText(strTime);
+                    SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+                    Date d = formatter.parse(strTime);
+                    Log.e(TAG, "Time Parsed: " + d.toString());
+                    strTime = new SimpleDateFormat("hh:mm aa").format(d);
+                    Log.e(TAG, "Time Formatted: " + strTime);
+                    mDisplayedTime.setText(strTime);
+                } catch (Exception e) {
+                    Log.e(TAG, "Time parsing exception: " + e.getMessage());
+                }
             }
         };
 
@@ -266,7 +286,6 @@ public class CreatePost extends AppCompatActivity {
                         progress.setVisibility(View.GONE);
                         post.setVisibility(View.VISIBLE);
                         helpers.showSuccess(CreatePost.this, "JOB POSTED!", "Your job has been posted successfully.");
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

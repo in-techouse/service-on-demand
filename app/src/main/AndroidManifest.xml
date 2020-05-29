@@ -20,11 +20,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+            android:name=".activities.PostDetailAndSendOffer"
+            android:label="@string/title_activity_post_detail_and_send_offer"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/googleKey" />
 
+        <activity
+            android:name=".activities.PostDetail"
+            android:label="@string/title_activity_post_detail"
+            android:parentActivityName=".activities.MyPosts"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SelectAddress"
             android:label="Select Address"
@@ -76,9 +86,6 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activities.GetStarted"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activities.Home"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MainActivity"
