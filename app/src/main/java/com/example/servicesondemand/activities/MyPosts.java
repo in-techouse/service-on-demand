@@ -76,9 +76,9 @@ public class MyPosts extends AppCompatActivity {
                 Log.e("MyPosts", "Data Snap Shot: " + dataSnapshot.toString());
                 posts.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Post c = d.getValue(Post.class);
-                    if (c != null) {
-                        posts.add(c);
+                    Post p = d.getValue(Post.class);
+                    if (p != null && p.getStatus().equals("Posted")) {
+                        posts.add(p);
                     }
                 }
                 Collections.reverse(posts); // Reverse the data list, to display the latest booking on top.

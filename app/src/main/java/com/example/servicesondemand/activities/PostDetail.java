@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +26,7 @@ public class PostDetail extends AppCompatActivity {
     private Helpers helpers;
     private Post post;
     private SliderLayout slider;
+    private TextView date, time, offers, category, status, address, description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,22 @@ public class PostDetail extends AppCompatActivity {
 
             slider.addSlider(textSliderView);
         }
+
+        date = findViewById(R.id.date);
+        time = findViewById(R.id.time);
+        offers = findViewById(R.id.offers);
+        category = findViewById(R.id.category);
+        status = findViewById(R.id.status);
+        address = findViewById(R.id.address);
+        description = findViewById(R.id.description);
+
+        date.setText(post.getDate());
+        time.setText(post.getTime());
+        offers.setText(post.getOffers().size() + "");
+        category.setText(post.getCategory());
+        status.setText(post.getStatus());
+        address.setText(post.getAddress());
+        description.setText(post.getDescription());
     }
 
     @Override

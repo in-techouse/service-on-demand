@@ -71,16 +71,15 @@ public class MyOrders extends AppCompatActivity {
         noRecordFound.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
 
-
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e("MyOrders", "Data Snap Shot: " + dataSnapshot.toString());
                 orders.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Post c = d.getValue(Post.class);
-                    if (c != null) {
-                        orders.add(c);
+                    Post p = d.getValue(Post.class);
+                    if (p != null && !p.getStatus().equals("Posted")) {
+                        orders.add(p);
                     }
                 }
                 Collections.reverse(orders); // Reverse the data list, to display the latest booking on top.
