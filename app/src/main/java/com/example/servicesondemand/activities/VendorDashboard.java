@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,13 +14,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.adapter.PostAdapter;
+import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -27,12 +42,21 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
     private DrawerLayout drawer;
     private User user;
     private Session session;
+    private PostAdapter adapter;
+    private RecyclerView myPostsList;
+    private LinearLayout loading;
+    private TextView noRecordFound;
+    private Helpers helpers;
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Jobs");
+    private ValueEventListener eventListener;
+    private List<Post> posts;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_dashboard);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
@@ -62,6 +86,18 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
         email.setText(user.getEmail());
         category.setText(user.getCategory());
         perHourCharge.setText(user.getPerHourCharge() + " RS / Hr");
+
+        myPostsList = findViewById(R.id.myPostsList);
+        loading = findViewById(R.id.loading);
+        noRecordFound = findViewById(R.id.noRecordFound);
+
+        myPostsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new PostAdapter(getApplicationContext());
+        myPostsList.setAdapter(adapter);
+
+        helpers = new Helpers();
+        posts = new ArrayList<>();
+        loadPosts();
     }
 
     @Override
@@ -101,5 +137,75 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
         }
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    private void loadPosts() {
+        if (!helpers.isConnected(getApplicationContext())) {
+            helpers.showError(VendorDashboard.this, "ERROR!", "No internet connection found.\nPlease connect to a network and try again.");
+            return;
+        }
+
+        myPostsList.setVisibility(View.GONE);
+        noRecordFound.setVisibility(View.GONE);
+        loading.setVisibility(View.VISIBLE);
+
+        eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("MyPosts", "Data Snap Shot: " + dataSnapshot.toString());
+                posts.clear(); // Remove data, to avoid duplication
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    Post p = d.getValue(Post.class);
+                    if (p != null && p.getStatus().equals("Posted")) {
+                        posts.add(p);
+                    }
+                }
+                Collections.reverse(posts); // Reverse the data list, to display the latest booking on top.
+                Log.e("MyPosts", "Data List Size: " + posts.size());
+                if (posts.size() > 0) {
+                    Log.e("MyPosts", "If, list visible");
+                    myPostsList.setVisibility(View.VISIBLE);
+                    noRecordFound.setVisibility(View.GONE);
+                } else {
+                    Log.e("MyPosts", "Else, list invisible");
+                    noRecordFound.setVisibility(View.VISIBLE);
+                    myPostsList.setVisibility(View.GONE);
+                }
+                loading.setVisibility(View.GONE);
+                adapter.setData(posts);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                loading.setVisibility(View.GONE);
+                noRecordFound.setVisibility(View.VISIBLE);
+                myPostsList.setVisibility(View.GONE);
+            }
+        };
+
+        reference.addValueEventListener(eventListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (eventListener != null)
+            reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(eventListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                break;
+            }
+        }
+        return true;
     }
 }
