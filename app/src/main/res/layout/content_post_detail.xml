@@ -19,7 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="80dp">
 
             <View
                 android:layout_width="match_parent"
@@ -31,6 +32,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="7dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="7dp"
+                android:paddingBottom="3dp"
                 android:text="Job Detail"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="17dp"
@@ -277,9 +282,9 @@
                 android:background="@color/colorPrimary" />
 
             <LinearLayout
-                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -288,10 +293,9 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
-                    android:text="If you are intrested, you can add your responce."
-                    android:textSize="20dp"
+                    android:text="If you are interested, you can add your responce."
                     android:textColor="@color/colorPrimaryDark"
-                ></TextView>
+                    android:textSize="20dp" />
 
                 <EditText
                     android:id="@+id/response"
@@ -301,9 +305,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
                     android:hint="Enter your respose here."
+                    android:inputType="text"
                     android:textColor="#BBBABA"
-                    android:textSize="14dp"
-                    android:inputType="text"/>
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/perHourCharge"
@@ -313,21 +317,21 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
                     android:hint="Enter your per hour charge."
+                    android:inputType="number"
                     android:textColor="#BBBABA"
-                    android:textSize="14dp"
-                    android:inputType="number"/>
+                    android:textSize="14dp" />
 
                 <EditText
-                    android:id="@+id/jobtime"
+                    android:id="@+id/jobTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
-                    android:hint="Enter the time."
+                    android:hint="Enter the time required to complete the job (in minutes)"
+                    android:inputType="time"
                     android:textColor="#BBBABA"
-                    android:textSize="14dp"
-                    android:inputType="time"/>
+                    android:textSize="14dp" />
 
                 <Button
                     android:id="@+id/sendresponse"

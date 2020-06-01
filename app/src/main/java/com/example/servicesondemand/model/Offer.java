@@ -3,20 +3,21 @@ package com.example.servicesondemand.model;
 import java.io.Serializable;
 
 public class Offer implements Serializable {
-    private String id, workerId, userId, jobId, timeRequired, description, status;
-    private int budgetOffered;
+    private String id, workerId, userId, jobId, description, status;
+    private int budgetOffered, timeRequired;
+
     public Offer() {
     }
 
-    public Offer(String id, String workerId, String userId, String jobId, String timeRequired, String description, String status, int budgetOffered) {
+    public Offer(String id, String workerId, String userId, String jobId, String description, String status, int budgetOffered, int timeRequired) {
         this.id = id;
         this.workerId = workerId;
         this.userId = userId;
         this.jobId = jobId;
-        this.timeRequired = timeRequired;
         this.description = description;
         this.status = status;
         this.budgetOffered = budgetOffered;
+        this.timeRequired = timeRequired;
     }
 
     public String getId() {
@@ -51,14 +52,6 @@ public class Offer implements Serializable {
         this.jobId = jobId;
     }
 
-    public String getTimeRequired() {
-        return timeRequired;
-    }
-
-    public void setTimeRequired(String timeRequired) {
-        this.timeRequired = timeRequired;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -81,5 +74,13 @@ public class Offer implements Serializable {
 
     public void setBudgetOffered(int budgetOffered) {
         this.budgetOffered = budgetOffered;
+    }
+
+    public int getTimeRequired() {
+        return timeRequired;
+    }
+
+    public void setTimeRequired(int timeRequired) {
+        this.timeRequired = timeRequired;
     }
 }

@@ -183,7 +183,7 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
             }
         };
 
-        reference.addValueEventListener(eventListener);
+        reference.orderByChild("category").equalTo(user.getCategory()).addValueEventListener(eventListener);
     }
 
     @Override

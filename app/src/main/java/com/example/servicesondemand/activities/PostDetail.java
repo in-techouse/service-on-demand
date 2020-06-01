@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class PostDetail extends AppCompatActivity {
-    private EditText Response, PerHourCharge, JobTime;
+    private EditText response, perHourCharge, jobTime;
     private String strResponse, strPerHourCharge, strJobTime;
     private Button SendResponse;
     private static final String TAG = "PostDetail";
@@ -76,27 +75,31 @@ public class PostDetail extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
 
         SendResponse = findViewById(R.id.sendresponse);
-        Response = findViewById(R.id.response);
-        PerHourCharge = findViewById(R.id.perHourCharge);
-        JobTime = findViewById(R.id.jobtime);
+        response = findViewById(R.id.response);
+        perHourCharge = findViewById(R.id.perHourCharge);
+        jobTime = findViewById(R.id.jobTime);
 
         helpers = new Helpers();
 
         SendResponse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("PostDetail", "On Click");
                 boolean flag = helpers.isConnected(PostDetail.this);
                 if (!flag) {
                     helpers.showError(PostDetail.this, "ERROR", "NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
                     return;
                 }
                 boolean isFlag = isValid();
+                Log.e("PostDetail", "is Valid: " + isFlag);
 
                 if (isFlag) {
+                    Log.e("PostDetail", "Saving");
                     // Everything is valid
                     loadingBar.setTitle("SAVING");
                     loadingBar.setMessage("Please wait, while we are sending your offer to the job owner...");
                     loadingBar.setCanceledOnTouchOutside(false);
+                    loadingBar.setCancelable(false);
                     loadingBar.show();
                     Offer offer = new Offer();
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Offers");
@@ -104,11 +107,11 @@ public class PostDetail extends AppCompatActivity {
                     offer.setId(id);
                     offer.setWorkerId(user.getId());
                     offer.setUserId(post.getUserId());
-                    offer.setDescription(SendResponse.getText().toString());
-                    offer.setBudgetOffered(Integer.parseInt(PerHourCharge.getText().toString()));
+                    offer.setDescription(strResponse);
+                    offer.setBudgetOffered(Integer.parseInt(strPerHourCharge));
                     offer.setJobId(post.getId());
                     offer.setStatus("Sent");
-                    offer.setTimeRequired(JobTime.getText().toString());
+                    offer.setTimeRequired(Integer.parseInt(strJobTime));
                     reference.child(offer.getId()).setValue(offer)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -163,6 +166,8 @@ public class PostDetail extends AppCompatActivity {
         status.setText(post.getStatus());
         address.setText(post.getAddress());
         description.setText(post.getDescription());
+
+        loadingBar = new ProgressDialog(this);
     }
 
     @Override
@@ -186,28 +191,28 @@ public class PostDetail extends AppCompatActivity {
     private boolean isValid() {
         boolean flag = true;
 
-        strResponse = SendResponse.getText().toString();
-        strPerHourCharge = PerHourCharge.getText().toString();
-        strJobTime = JobTime.getText().toString();
+        strResponse = response.getText().toString();
+        strPerHourCharge = perHourCharge.getText().toString();
+        strJobTime = jobTime.getText().toString();
 
         if (strResponse.length() < 5) {
-            Response.setError("Enter your offer.");
+            response.setError("Enter your offer.");
             flag = false;
         } else {
-            Response.setError(null);
+            response.setError(null);
         }
 
         if (strPerHourCharge.length() < 1) {
-            PerHourCharge.setError("Enter per hour charge");
+            perHourCharge.setError("Enter per hour charge");
             flag = false;
         } else {
-            Response.setError(null);
+            perHourCharge.setError(null);
         }
         if (strJobTime.length() < 2) {
-            JobTime.setError("Enter time");
+            jobTime.setError("Enter time");
             flag = false;
         } else {
-            JobTime.setError(null);
+            jobTime.setError(null);
         }
         return flag;
     }
