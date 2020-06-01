@@ -27,7 +27,7 @@
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/app_bar_height"
-                android:scaleType="fitXY" />
+                android:scaleType="fitCenter" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -47,10 +47,10 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
 
     <Button
-        android:id="@+id/submit"
+        android:id="@+id/update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
