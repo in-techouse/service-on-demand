@@ -1,11 +1,17 @@
 package com.example.servicesondemand.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -16,10 +22,18 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.Offer;
 import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class PostDetail extends AppCompatActivity {
+    private EditText Response, PerHourCharge, JobTime;
+    private String strResponse, strPerHourCharge, strJobTime;
+    private Button SendResponse;
     private static final String TAG = "PostDetail";
     private Session session;
     private User user;
@@ -27,6 +41,7 @@ public class PostDetail extends AppCompatActivity {
     private Post post;
     private SliderLayout slider;
     private TextView date, time, offers, category, status, address, description;
+    private ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +75,60 @@ public class PostDetail extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setHomeButtonEnabled(true);
 
+        SendResponse = findViewById(R.id.sendresponse);
+        Response = findViewById(R.id.response);
+        PerHourCharge = findViewById(R.id.perHourCharge);
+        JobTime = findViewById(R.id.jobtime);
+
         helpers = new Helpers();
+
+        SendResponse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean flag = helpers.isConnected(PostDetail.this);
+                if (!flag) {
+                    helpers.showError(PostDetail.this, "ERROR", "NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
+                    return;
+                }
+                boolean isFlag = isValid();
+
+                if (isFlag) {
+                    // Everything is valid
+                    loadingBar.setTitle("SAVING");
+                    loadingBar.setMessage("Please wait, while we are sending your offer to the job owner...");
+                    loadingBar.setCanceledOnTouchOutside(false);
+                    loadingBar.show();
+                    Offer offer = new Offer();
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Offers");
+                    String id = reference.push().getKey();
+                    offer.setId(id);
+                    offer.setWorkerId(user.getId());
+                    offer.setUserId(post.getUserId());
+                    offer.setDescription(SendResponse.getText().toString());
+                    offer.setBudgetOffered(Integer.parseInt(PerHourCharge.getText().toString()));
+                    offer.setJobId(post.getId());
+                    offer.setStatus("Sent");
+                    offer.setTimeRequired(JobTime.getText().toString());
+                    reference.child(offer.getId()).setValue(offer)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    loadingBar.dismiss();
+                                    helpers.showSuccess(PostDetail.this, "Offer POSTED!", "Your Offer has been posted successfully.");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    loadingBar.dismiss();
+                                    helpers.showError(PostDetail.this, "ERROR!", "Offer not posted.\nSomething went wrong.\nPlease try again later,");
+                                }
+                            });
+
+                }
+            }
+        });
+
         session = new Session(getApplicationContext());
         user = session.getUser();
 
@@ -108,8 +176,39 @@ public class PostDetail extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+
+    private boolean isValid() {
+        boolean flag = true;
+
+        strResponse = SendResponse.getText().toString();
+        strPerHourCharge = PerHourCharge.getText().toString();
+        strJobTime = JobTime.getText().toString();
+
+        if (strResponse.length() < 5) {
+            Response.setError("Enter your offer.");
+            flag = false;
+        } else {
+            Response.setError(null);
+        }
+
+        if (strPerHourCharge.length() < 1) {
+            PerHourCharge.setError("Enter per hour charge");
+            flag = false;
+        } else {
+            Response.setError(null);
+        }
+        if (strJobTime.length() < 2) {
+            JobTime.setError("Enter time");
+            flag = false;
+        } else {
+            JobTime.setError(null);
+        }
+        return flag;
     }
 }

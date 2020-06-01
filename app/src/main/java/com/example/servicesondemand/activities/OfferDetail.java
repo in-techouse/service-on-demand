@@ -7,12 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.servicesondemand.R;
-import com.example.servicesondemand.model.Offers;
+import com.example.servicesondemand.model.Offer;
+import com.example.servicesondemand.model.Offer;
 import com.example.servicesondemand.model.Post;
 
 public class OfferDetail extends AppCompatActivity {
     private static final String TAG = "OfferDetail";
-    private Offers offers;
+    private Offer offer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +34,9 @@ public class OfferDetail extends AppCompatActivity {
             return;
         }
 
-        offers = (Offers) bundle.getSerializable("offers");
+        offer = (Offer) bundle.getSerializable("offers");
 
-        if (offers == null) {
+        if (offer == null) {
             Log.e(TAG, "Offer is null");
             finish();
             return;

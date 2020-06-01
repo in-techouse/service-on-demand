@@ -276,6 +276,78 @@
                 android:layout_marginBottom="13dp"
                 android:background="@color/colorPrimary" />
 
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="7dp"
+                    android:text="If you are intrested, you can add your responce."
+                    android:textSize="20dp"
+                    android:textColor="@color/colorPrimaryDark"
+                ></TextView>
+
+                <EditText
+                    android:id="@+id/response"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="7dp"
+                    android:hint="Enter your respose here."
+                    android:textColor="#BBBABA"
+                    android:textSize="14dp"
+                    android:inputType="text"/>
+
+                <EditText
+                    android:id="@+id/perHourCharge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="7dp"
+                    android:hint="Enter your per hour charge."
+                    android:textColor="#BBBABA"
+                    android:textSize="14dp"
+                    android:inputType="number"/>
+
+                <EditText
+                    android:id="@+id/jobtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="7dp"
+                    android:hint="Enter the time."
+                    android:textColor="#BBBABA"
+                    android:textSize="14dp"
+                    android:inputType="time"/>
+
+                <Button
+                    android:id="@+id/sendresponse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/post_description"
+                    android:layout_gravity="bottom"
+                    android:background="@color/colorPrimaryDark"
+                    android:text="Post"
+                    android:textColor="#ffff" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="13dp"
+                android:background="@color/colorPrimary" />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
