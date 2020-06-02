@@ -59,7 +59,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
     public int getItemCount() {
         return data.size();
     }
-
     class OfferHolder extends RecyclerView.ViewHolder {
 
         TextView category, description, timerequired, perHourCharge;
