@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.model.Offer;
@@ -14,6 +15,7 @@ import com.example.servicesondemand.model.Post;
 public class OfferDetail extends AppCompatActivity {
     private static final String TAG = "OfferDetail";
     private Offer offer;
+    private TextView budget, time, description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,15 @@ public class OfferDetail extends AppCompatActivity {
             finish();
             return;
         }
+        time = findViewById(R.id.time);
+        budget = findViewById(R.id.budget);
+        description = findViewById(R.id.description);
+
+        budget.setText(offer.getBudgetOffered());
+        time.setText(offer.getTimeRequired());
+        description.setText(offer.getDescription());
 
     }
+
+
 }
