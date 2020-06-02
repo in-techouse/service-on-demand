@@ -30,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class PostDetail extends AppCompatActivity {
-    private EditText response, perHourCharge, jobTime;
+    private EditText Response, PerHourCharge, JobTime;
     private String strResponse, strPerHourCharge, strJobTime;
     private Button SendResponse;
     private static final String TAG = "PostDetail";
@@ -75,9 +75,9 @@ public class PostDetail extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
 
         SendResponse = findViewById(R.id.sendresponse);
-        response = findViewById(R.id.response);
-        perHourCharge = findViewById(R.id.perHourCharge);
-        jobTime = findViewById(R.id.jobTime);
+        Response = findViewById(R.id.response);
+        PerHourCharge = findViewById(R.id.perHourCharge);
+        JobTime = findViewById(R.id.jobtime);
 
         helpers = new Helpers();
 
@@ -191,28 +191,28 @@ public class PostDetail extends AppCompatActivity {
     private boolean isValid() {
         boolean flag = true;
 
-        strResponse = response.getText().toString();
-        strPerHourCharge = perHourCharge.getText().toString();
-        strJobTime = jobTime.getText().toString();
+        strResponse = Response.getText().toString();
+        strPerHourCharge = PerHourCharge.getText().toString();
+        strJobTime = JobTime.getText().toString();
 
         if (strResponse.length() < 5) {
-            response.setError("Enter your offer.");
+            Response.setError("Enter your offer.");
             flag = false;
         } else {
-            response.setError(null);
+            Response.setError(null);
         }
 
         if (strPerHourCharge.length() < 1) {
-            perHourCharge.setError("Enter per hour charge");
+            PerHourCharge.setError("Enter per hour charge");
             flag = false;
         } else {
-            perHourCharge.setError(null);
+            PerHourCharge.setError(null);
         }
         if (strJobTime.length() < 2) {
-            jobTime.setError("Enter time");
+            JobTime.setError("Enter time");
             flag = false;
         } else {
-            jobTime.setError(null);
+            JobTime.setError(null);
         }
         return flag;
     }

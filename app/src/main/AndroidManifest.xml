@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".activities.OfferDetail"></activity>
+        <activity android:name=".activities.OffersActivity"></activity>
+        <activity android:name=".activities.OfferDetail" />
         <activity
             android:name=".activities.PostDetailAndSendOffer"
             android:label="@string/title_activity_post_detail_and_send_offer"

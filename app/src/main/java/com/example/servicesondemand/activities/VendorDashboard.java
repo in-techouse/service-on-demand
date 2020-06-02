@@ -113,6 +113,11 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
                 startActivity(intent);
                 break;
             }
+            case R.id.nav_offers: {
+                Intent intent = new Intent(VendorDashboard.this, OffersActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.nav_notifications: {
                 Intent intent = new Intent(VendorDashboard.this, MyNotifications.class);
                 startActivity(intent);

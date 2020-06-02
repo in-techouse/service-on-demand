@@ -13,6 +13,10 @@
             android:icon="@drawable/order"
             android:title="My Orders" />
         <item
+            android:id="@+id/nav_offers"
+            android:icon="@drawable/offer"
+            android:title="My Offers" />
+        <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/bell"
             android:title="My Notification" />
