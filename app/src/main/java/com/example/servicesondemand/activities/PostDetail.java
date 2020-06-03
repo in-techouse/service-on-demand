@@ -189,7 +189,7 @@ public class PostDetail extends AppCompatActivity {
 
         loadingBar = new ProgressDialog(this);
 
-        if (user.getType() == 0) {
+        if (user.getType() == 0) {//Check for checking the status of job k ye task kisi worker
             offersList.setVisibility(View.VISIBLE);
             sendOffer.setVisibility(View.GONE);
             LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext());
@@ -202,9 +202,9 @@ public class PostDetail extends AppCompatActivity {
         } else {
             offersList.setVisibility(View.GONE);
             if (post.getStatus().equalsIgnoreCase("Posted") && post.getWorkerId().length() < 1) {
-                sendOffer.setVisibility(View.GONE);
-            } else {
                 sendOffer.setVisibility(View.VISIBLE);
+            } else {
+                sendOffer.setVisibility(View.GONE);
             }
         }
     }
