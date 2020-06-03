@@ -8,11 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
@@ -30,10 +32,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class PostDetail extends AppCompatActivity {
+    private static final String TAG = "PostDetail";
     private EditText Response, PerHourCharge, JobTime;
     private String strResponse, strPerHourCharge, strJobTime;
     private Button SendResponse;
-    private static final String TAG = "PostDetail";
     private Session session;
     private User user;
     private Helpers helpers;
@@ -41,6 +43,8 @@ public class PostDetail extends AppCompatActivity {
     private SliderLayout slider;
     private TextView date, time, offers, category, status, address, description;
     private ProgressDialog loadingBar;
+    private LinearLayout sendOffer;
+    private RecyclerView offersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,8 @@ public class PostDetail extends AppCompatActivity {
         Response = findViewById(R.id.response);
         PerHourCharge = findViewById(R.id.perHourCharge);
         JobTime = findViewById(R.id.jobtime);
+        sendOffer = findViewById(R.id.sendOffer);
+        offersList = findViewById(R.id.offersList);
 
         helpers = new Helpers();
 
@@ -161,36 +167,29 @@ public class PostDetail extends AppCompatActivity {
 
         date.setText(post.getDate());
         time.setText(post.getTime());
-        offers.setText(post.getOffers().size() + "");
+        offers.setText(post.getOffers() + "");
         category.setText(post.getCategory());
         status.setText(post.getStatus());
         address.setText(post.getAddress());
         description.setText(post.getDescription());
 
         loadingBar = new ProgressDialog(this);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                finish();
-                break;
+        if (user.getType() == 0) {
+            offersList.setVisibility(View.VISIBLE);
+            sendOffer.setVisibility(View.GONE);
+        } else {
+            offersList.setVisibility(View.GONE);
+            if (post.getStatus().equalsIgnoreCase("Posted") && post.getWorkerId().length() < 1) {
+                sendOffer.setVisibility(View.GONE);
+            } else {
+                sendOffer.setVisibility(View.VISIBLE);
             }
         }
-        return true;
     }
-
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 
     private boolean isValid() {
         boolean flag = true;
-
         strResponse = Response.getText().toString();
         strPerHourCharge = PerHourCharge.getText().toString();
         strJobTime = JobTime.getText().toString();
@@ -215,5 +214,22 @@ public class PostDetail extends AppCompatActivity {
             JobTime.setError(null);
         }
         return flag;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                break;
+            }
+        }
+        return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

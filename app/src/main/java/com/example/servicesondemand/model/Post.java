@@ -1,21 +1,21 @@
 package com.example.servicesondemand.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Post implements Serializable {
     private String id, userId, workerId, status, date, time, address, description, category;
     private double latitude, longitude;
-    private List<Offer> offers;
     private List<String> images;
+    private int offers;
 
     public Post() {
-        offers = new ArrayList<>();
-        images = new ArrayList<>();
+        offers = 0;
+        latitude = 0;
+        longitude = 0;
     }
 
-    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, double latitude, double longitude, List<Offer> offers, List<String> images) {
+    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, double latitude, double longitude, List<String> images, int offers) {
         this.id = id;
         this.userId = userId;
         this.workerId = workerId;
@@ -27,24 +27,8 @@ public class Post implements Serializable {
         this.category = category;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.offers = offers;
         this.images = images;
-    }
-
-    public List<Offer> getOffers() {
-        return offers;
-    }
-
-    public void setOffers(List<Offer> offers) {
         this.offers = offers;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getId() {
@@ -111,12 +95,12 @@ public class Post implements Serializable {
         this.description = description;
     }
 
-    public List<String> getImages() {
-        return images;
+    public String getCategory() {
+        return category;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public double getLatitude() {
@@ -133,5 +117,21 @@ public class Post implements Serializable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public int getOffers() {
+        return offers;
+    }
+
+    public void setOffers(int offers) {
+        this.offers = offers;
     }
 }

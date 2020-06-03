@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.PostDetail"
     tools:showIn="@layout/activity_post_detail">
@@ -273,7 +274,6 @@
                     android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -282,9 +282,10 @@
                 android:background="@color/colorPrimary" />
 
             <LinearLayout
+                android:id="@+id/sendOffer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -293,9 +294,10 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
-                    android:text="If you are interested, you can add your responce."
+                    android:text="If you are interested in doing the job, you can add your response."
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20dp" />
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/response"
@@ -345,12 +347,18 @@
 
             </LinearLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/offersList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="13dp"
                 android:background="@color/colorPrimary" />
+
 
         </LinearLayout>
 

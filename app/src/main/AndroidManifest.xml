@@ -20,17 +20,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".activities.OffersActivity"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/googleKey" />
+
+        <activity
+            android:name=".activities.OffersActivity"
+            android:parentActivityName=".activities.VendorDashboard"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activities.OfferDetail" />
         <activity
             android:name=".activities.PostDetailAndSendOffer"
             android:label="@string/title_activity_post_detail_and_send_offer"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/googleKey" />
-
         <activity
             android:name=".activities.PostDetail"
             android:label="@string/title_activity_post_detail"

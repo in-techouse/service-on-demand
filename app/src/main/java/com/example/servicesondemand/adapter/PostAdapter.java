@@ -59,7 +59,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
             holder.date.setText(post.getDate());
         }
         holder.time.setText(post.getTime());
-        holder.offers.setText(post.getOffers().size() + "");
+        holder.offers.setText(post.getOffers() + "");
 
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
