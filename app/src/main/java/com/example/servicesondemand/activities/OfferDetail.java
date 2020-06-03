@@ -36,7 +36,7 @@ public class OfferDetail extends AppCompatActivity {
             return;
         }
 
-        offer = (Offer) bundle.getSerializable("offers");
+        offer = (Offer) bundle.getSerializable("offer");
 
         if (offer == null) {
             Log.e(TAG, "Offer is null");

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -21,6 +22,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.adapter.OfferAdapter;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Offer;
@@ -28,8 +30,15 @@ import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PostDetail extends AppCompatActivity {
     private static final String TAG = "PostDetail";
@@ -45,6 +54,10 @@ public class PostDetail extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private LinearLayout sendOffer;
     private RecyclerView offersList;
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Offers");
+    private ValueEventListener eventListener;
+    private OfferAdapter adapter;
+    private List<Offer> jobOffers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +91,7 @@ public class PostDetail extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setHomeButtonEnabled(true);
 
+        jobOffers = new ArrayList<>();
         SendResponse = findViewById(R.id.sendresponse);
         Response = findViewById(R.id.response);
         PerHourCharge = findViewById(R.id.perHourCharge);
@@ -178,6 +192,13 @@ public class PostDetail extends AppCompatActivity {
         if (user.getType() == 0) {
             offersList.setVisibility(View.VISIBLE);
             sendOffer.setVisibility(View.GONE);
+            LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext());
+            linearLayout.setOrientation(LinearLayoutManager.VERTICAL);
+            linearLayout.setAutoMeasureEnabled(true);
+            offersList.setLayoutManager(linearLayout);
+            adapter = new OfferAdapter(getApplicationContext());
+            offersList.setAdapter(adapter);
+            loadMyOffers();
         } else {
             offersList.setVisibility(View.GONE);
             if (post.getStatus().equalsIgnoreCase("Posted") && post.getWorkerId().length() < 1) {
@@ -186,6 +207,39 @@ public class PostDetail extends AppCompatActivity {
                 sendOffer.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    private void loadMyOffers() {
+        if (!helpers.isConnected(getApplicationContext())) {
+            helpers.showError(PostDetail.this, "ERROR!", "No internet connection found.\nPlease connect to a network and try again.");
+            return;
+        }
+
+        eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (eventListener != null)
+                    reference.orderByChild("jobId").equalTo(post.getId()).removeEventListener(eventListener);
+                Log.e("PostDetail", "Data Snap Shot: " + dataSnapshot.toString());
+                jobOffers.clear(); // Remove data, to avoid duplication
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    Offer p = d.getValue(Offer.class);
+                    jobOffers.add(p);
+                }
+                Collections.reverse(jobOffers); // Reverse the data list, to display the latest booking on top.
+                Log.e("PostDetail", "Data List Size: " + jobOffers.size());
+                adapter.setData(jobOffers);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (eventListener != null)
+                    reference.orderByChild("jobId").equalTo(post.getId()).removeEventListener(eventListener);
+
+            }
+        };
+
+        reference.orderByChild("jobId").equalTo(post.getId()).addValueEventListener(eventListener);
     }
 
     private boolean isValid() {

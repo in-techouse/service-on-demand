@@ -66,8 +66,6 @@ public class OffersActivity extends AppCompatActivity {
             helpers.showError(OffersActivity.this, "ERROR!", "No internet connection found.\nPlease connect to a network and try again.");
             return;
         }
-
-
         myOffersList.setVisibility(View.GONE);
         noRecordFound.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
@@ -75,13 +73,13 @@ public class OffersActivity extends AppCompatActivity {
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (eventListener != null)
+                    reference.orderByChild("workerId").equalTo(user.getId()).removeEventListener(eventListener);
                 Log.e("MyOffers", "Data Snap Shot: " + dataSnapshot.toString());
                 offers.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     Offer p = d.getValue(Offer.class);
-//                    if (p != null && p.getStatus().equals("")) {
                     offers.add(p);
-//                    }
                 }
                 Collections.reverse(offers); // Reverse the data list, to display the latest booking on top.
                 Log.e("MyOffers", "Data List Size: " + offers.size());
@@ -100,6 +98,9 @@ public class OffersActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (eventListener != null)
+                    reference.orderByChild("workerId").equalTo(user.getId()).removeEventListener(eventListener);
+
                 loading.setVisibility(View.GONE);
                 noRecordFound.setVisibility(View.VISIBLE);
                 myOffersList.setVisibility(View.GONE);

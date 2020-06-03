@@ -53,6 +53,17 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
         holder.description.setText(offer.getDescription());
         holder.perHourCharge.setText(offer.getBudgetOffered() + " RS.");
         holder.timerequired.setText(offer.getTimeRequired() + "");
+        holder.mainCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(context, OfferDetail.class );
+                Bundle b = new Bundle();
+                b.putSerializable("offer", offer);
+                it.putExtras(b);
+                it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(it);
+            }
+        });
     }
 
     @Override
@@ -64,11 +75,13 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
         TextView category, description, timerequired, perHourCharge;
         CardView mainCard;
 
+
         OfferHolder(@NonNull View itemView) {
             super(itemView);
             description = itemView.findViewById(R.id.description);
             timerequired = itemView.findViewById(R.id.timerequired);
             perHourCharge = itemView.findViewById(R.id.perHourCharge);
+            mainCard=itemView.findViewById(R.id.offer_item);
         }
     }
 
