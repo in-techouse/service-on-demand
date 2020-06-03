@@ -106,7 +106,7 @@ public class OffersActivity extends AppCompatActivity {
             }
         };
 
-        reference.addValueEventListener(eventListener);
+        reference.orderByChild("workerId").equalTo(user.getId()).addValueEventListener(eventListener);
     }
 
     @Override
