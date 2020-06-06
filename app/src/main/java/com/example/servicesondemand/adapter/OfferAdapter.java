@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.activities.OfferDetail;
+import com.example.servicesondemand.activities.OfferVenderDetail;
 import com.example.servicesondemand.activities.PostDetail;
 import com.example.servicesondemand.model.Offer;
 import com.example.servicesondemand.model.Post;
@@ -56,7 +57,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(context, OfferDetail.class );
+                Intent it = new Intent(context, OfferVenderDetail.class );
                 Bundle b = new Bundle();
                 b.putSerializable("offer", offer);
                 it.putExtras(b);
