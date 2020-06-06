@@ -1,16 +1,14 @@
 package com.example.servicesondemand.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.model.Offer;
-import com.example.servicesondemand.model.Offer;
-import com.example.servicesondemand.model.Post;
 
 public class OfferDetail extends AppCompatActivity {
     private static final String TAG = "OfferDetail";
@@ -47,8 +45,8 @@ public class OfferDetail extends AppCompatActivity {
         budget = findViewById(R.id.budget);
         description = findViewById(R.id.description);
 
-        budget.setText(offer.getBudgetOffered());
-        time.setText(offer.getTimeRequired());
+        budget.setText(offer.getBudgetOffered() + " RS");
+        time.setText(offer.getTimeRequired() + " Minutes");
         description.setText(offer.getDescription());
 
     }
