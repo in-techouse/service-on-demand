@@ -204,7 +204,6 @@
                             android:textColor="@color/colorPrimary" />
                     </LinearLayout>
 
-
                 </LinearLayout>
 
             </ScrollView>
