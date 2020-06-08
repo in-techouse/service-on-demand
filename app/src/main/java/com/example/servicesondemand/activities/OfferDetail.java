@@ -1,9 +1,7 @@
 package com.example.servicesondemand.activities;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Offer;
@@ -24,14 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.ref.Reference;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class OfferDetail extends AppCompatActivity {
     private static final String TAG = "OfferDetail";
     private Offer offer;
-    private TextView budget, time, description, phoneNumber,name,email;
+    private TextView budget, time, description, phoneNumber, name, email;
     private Button acceptOffer;
     private Helpers helpers;
     private ScrollView main;
@@ -40,7 +37,6 @@ public class OfferDetail extends AppCompatActivity {
     private ValueEventListener listener;
     private User vendor;
     protected CircleImageView image;
-
 
 
     @Override
@@ -75,12 +71,11 @@ public class OfferDetail extends AppCompatActivity {
         loading = findViewById(R.id.loading);
         main = findViewById(R.id.main);
         acceptOffer = findViewById(R.id.acceptOffer);
-        helpers= new Helpers();
-        name= findViewById(R.id.name);
+        helpers = new Helpers();
+        name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         phoneNumber = findViewById(R.id.phoneNumber);
         email = findViewById(R.id.email);
-
 
 
         budget.setText(offer.getBudgetOffered() + " RS");
@@ -89,6 +84,7 @@ public class OfferDetail extends AppCompatActivity {
 
         loading.setVisibility(View.VISIBLE);
         main.setVisibility(View.GONE);
+        loadVendorDetail();
 
 
     }
@@ -96,12 +92,25 @@ public class OfferDetail extends AppCompatActivity {
     private void loadVendorDetail() {
 
 
-        listener= new ValueEventListener() {
+        listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                    vendor=dataSnapshot.getValue(User.class);
+                if (dataSnapshot.exists()) {
+                    vendor = dataSnapshot.getValue(User.class);
+
+                    if (vendor != null) {
+                        name.setText(vendor.getFirstName() + " " + vendor.getLastName());
+                        phoneNumber.setText(vendor.getPhone());
+                        email.setText(vendor.getEmail());
+                        if (vendor.getImage() != null && vendor.getImage().length() > 0) {
+                            Glide.with(getApplicationContext()).load(vendor.getImage()).into(image);
+                        }
+                    }
+                    loading.setVisibility(View.GONE);
+                    main.setVisibility(View.VISIBLE);
+
                 }
+
 
             }
 
