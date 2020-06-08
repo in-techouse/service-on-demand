@@ -76,11 +76,12 @@ public class Offer implements Serializable {
         this.budgetOffered = budgetOffered;
     }
 
-    public int getTimeRequired() {
-        return timeRequired;
-    }
+    public int getTimeRequired() { return timeRequired; }
 
     public void setTimeRequired(int timeRequired) {
         this.timeRequired = timeRequired;
     }
+
+
+
 }
