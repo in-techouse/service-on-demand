@@ -18,6 +18,8 @@ import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Offer;
 import com.example.servicesondemand.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +36,7 @@ public class OfferDetail extends AppCompatActivity {
     private Helpers helpers;
     private ScrollView main;
     private LinearLayout loading;
-    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     private ValueEventListener listener;
     private User vendor;
     protected CircleImageView image;
@@ -71,12 +73,43 @@ public class OfferDetail extends AppCompatActivity {
         description = findViewById(R.id.description);
         loading = findViewById(R.id.loading);
         main = findViewById(R.id.main);
-        acceptOffer = findViewById(R.id.acceptOffer);
         helpers = new Helpers();
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         phoneNumber = findViewById(R.id.phoneNumber);
         email = findViewById(R.id.email);
+        acceptOffer = findViewById(R.id.acceptOffer);
+
+        acceptOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isConnected = helpers.isConnected(OfferDetail.this);
+                if (!isConnected) {
+                    helpers.showError(OfferDetail.this, "ERROR", "NO INTERNET CONNECTION FOUND PLEASE CHECK INTERNET");
+                    return;
+                }
+                loading.setVisibility(View.VISIBLE);
+                main.setVisibility(View.GONE);
+                offer.setStatus("Accepted");
+                reference.child("Offers").child(offer.getId()).setValue(offer).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        loading.setVisibility(View.GONE);
+                        main.setVisibility(View.VISIBLE);
+                        helpers.showSuccess(OfferDetail.this, "OFFER_ACCEPTED", "OFFER ACCEPTED SUCCESFULLY");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        loading.setVisibility(View.VISIBLE);
+                        main.setVisibility(View.GONE);
+                        helpers.showError(OfferDetail.this, "ERROR", "SOMETHING WENT WRONG PLEASE CHECK AGAIN LATER");
+                    }
+                });
+
+            }
+        });
+
 
 
         budget.setText(offer.getBudgetOffered() + " RS");
@@ -89,6 +122,7 @@ public class OfferDetail extends AppCompatActivity {
     private void loadVendorDetail() {
         loading.setVisibility(View.VISIBLE);
         main.setVisibility(View.GONE);
+
 
         listener = new ValueEventListener() {
             @Override
@@ -109,6 +143,8 @@ public class OfferDetail extends AppCompatActivity {
                 }
             }
 
+
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 loading.setVisibility(View.GONE);
@@ -117,7 +153,7 @@ public class OfferDetail extends AppCompatActivity {
             }
         };
 
-        reference.child(offer.getWorkerId()).addValueEventListener(listener);
+        reference.child("Users").child(offer.getWorkerId()).addValueEventListener(listener);
     }
 
     @Override
