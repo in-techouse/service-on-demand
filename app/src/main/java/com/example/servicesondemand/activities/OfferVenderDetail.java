@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Offer;
@@ -69,7 +70,7 @@ public class OfferVenderDetail extends AppCompatActivity {
         main = findViewById(R.id.main);
         helpers = new Helpers();
         name = findViewById(R.id.name);
-        phonenumber = findViewById(R.id.phone_number_input);
+        phonenumber = findViewById(R.id.phoneNumber);
         email = findViewById(R.id.email);
         image = findViewById(R.id.image);
 
@@ -79,16 +80,26 @@ public class OfferVenderDetail extends AppCompatActivity {
         description.setText(offer.getDescription());
         loading.setVisibility(View.VISIBLE);
         main.setVisibility(View.GONE);
+        loadUserDetail();
     }
-
     private void loadUserDetail() {
         listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     customer = dataSnapshot.getValue(User.class);
-
+                    if (customer != null) {
+                        name.setText(customer.getFirstName() + "" + customer.getLastName());
+                        phonenumber.setText(customer.getPhone());
+                        email.setText(customer.getEmail());
+                        if (customer.getImage() != null && customer.getImage().length() > 0) {
+                            Glide.with(getApplicationContext()).load(customer.getImage()).into(image);
+                        }
+                    }
+                    loading.setVisibility(View.GONE);
+                    main.setVisibility(View.VISIBLE);
                 }
+
             }
 
             @Override
