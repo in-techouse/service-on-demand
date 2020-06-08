@@ -41,7 +41,10 @@
             android:name=".activities.OffersActivity"
             android:parentActivityName=".activities.VendorDashboard"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activities.OfferDetail" />
+        <activity
+            android:name=".activities.OfferDetail"
+            android:parentActivityName=".activities.PostDetail"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.PostDetailAndSendOffer"
             android:label="@string/title_activity_post_detail_and_send_offer"

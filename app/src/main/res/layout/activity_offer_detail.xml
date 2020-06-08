@@ -62,8 +62,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/image"
@@ -73,36 +73,37 @@
                             app:civ_border_color="#FF000000"
                             app:civ_border_width="2dp" />
 
-                        <TextView
-                            android:id="@+id/name"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginStart="5dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="7dp"
+                            android:layout_marginEnd="7dp"
                             android:layout_toEndOf="@id/image"
-                            android:text="Vendor Name"
-                            android:textSize="17dp"
-                            android:textStyle="bold" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/phoneNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/name"
-                            android:layout_marginStart="5dp"
-                            android:layout_toEndOf="@id/image"
-                            android:text="Vendor Phone"
-                            android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Customer Name"
+                                android:textSize="17dp"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/phoneNumber"
-                            android:layout_marginStart="5dp"
-                            android:layout_toEndOf="@id/image"
-                            android:text="Vendor Email"
-                            android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Customer Email"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/phoneNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Customer Phone" />
+
+                        </LinearLayout>
 
                     </RelativeLayout>
 

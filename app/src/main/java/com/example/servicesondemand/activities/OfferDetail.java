@@ -3,6 +3,7 @@ package com.example.servicesondemand.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -82,15 +83,12 @@ public class OfferDetail extends AppCompatActivity {
         time.setText(offer.getTimeRequired() + " Minutes");
         description.setText(offer.getDescription());
 
-        loading.setVisibility(View.VISIBLE);
-        main.setVisibility(View.GONE);
         loadVendorDetail();
-
-
     }
 
     private void loadVendorDetail() {
-
+        loading.setVisibility(View.VISIBLE);
+        main.setVisibility(View.GONE);
 
         listener = new ValueEventListener() {
             @Override
@@ -108,10 +106,7 @@ public class OfferDetail extends AppCompatActivity {
                     }
                     loading.setVisibility(View.GONE);
                     main.setVisibility(View.VISIBLE);
-
                 }
-
-
             }
 
             @Override
@@ -119,15 +114,25 @@ public class OfferDetail extends AppCompatActivity {
                 loading.setVisibility(View.GONE);
                 main.setVisibility(View.VISIBLE);
                 helpers.showError(OfferDetail.this, "ERROR", "SOMETHING WENT WRONG PLEASE TRY LATER");
-
-
             }
         };
 
         reference.child(offer.getWorkerId()).addValueEventListener(listener);
-
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                break;
+            }
+        }
+        return true;
+    }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

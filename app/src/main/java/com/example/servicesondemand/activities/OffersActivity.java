@@ -49,15 +49,14 @@ public class OffersActivity extends AppCompatActivity {
         loading = findViewById(R.id.loading);
         noRecordFound = findViewById(R.id.noRecordFound);
 
-        myOffersList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new OfferAdapter(getApplicationContext());
-        myOffersList.setAdapter(adapter);
-
         Session session = new Session(getApplicationContext());
-
         user = session.getUser();
         helpers = new Helpers();
         offers = new ArrayList<>();
+
+        myOffersList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new OfferAdapter(getApplicationContext(), user.getType());
+        myOffersList.setAdapter(adapter);
         loadMyOffers();
     }
 

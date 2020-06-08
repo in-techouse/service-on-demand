@@ -189,14 +189,14 @@ public class PostDetail extends AppCompatActivity {
 
         loadingBar = new ProgressDialog(this);
 
-        if (user.getType() == 0) {//Check for checking the status of job k ye task kisi worker
+        if (user.getType() == 0) { //Check for checking the status of job k ye task kisi worker
             offersList.setVisibility(View.VISIBLE);
             sendOffer.setVisibility(View.GONE);
             LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext());
             linearLayout.setOrientation(LinearLayoutManager.VERTICAL);
             linearLayout.setAutoMeasureEnabled(true);
             offersList.setLayoutManager(linearLayout);
-            adapter = new OfferAdapter(getApplicationContext());
+            adapter = new OfferAdapter(getApplicationContext(), user.getType());
             offersList.setAdapter(adapter);
             loadMyOffers();
         } else {
@@ -280,7 +280,6 @@ public class PostDetail extends AppCompatActivity {
         }
         return true;
     }
-
 
     @Override
     public void onBackPressed() {

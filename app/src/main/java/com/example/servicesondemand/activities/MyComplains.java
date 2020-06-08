@@ -1,6 +1,7 @@
 package com.example.servicesondemand.activities;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -76,5 +77,21 @@ public class MyComplains extends AppCompatActivity {
         };
 
         reference.orderByChild("userId").equalTo(user.getId()).addValueEventListener(listener);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                break;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

@@ -12,26 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.activities.OfferDetail;
 import com.example.servicesondemand.activities.OfferVenderDetail;
-import com.example.servicesondemand.activities.PostDetail;
 import com.example.servicesondemand.model.Offer;
-import com.example.servicesondemand.model.Post;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder> {
     private List<Offer> data;
     private Context context;
+    private int type;
 
-    public OfferAdapter(Context c) {
+    public OfferAdapter(Context c, int t) {
         data = new ArrayList<>();
         context = c;
+        type = t;
     }
 
     public void setData(List<Offer> data) {
@@ -57,7 +54,11 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(context, OfferVenderDetail.class );
+                Intent it;
+                if (type == 1)
+                    it = new Intent(context, OfferVenderDetail.class);
+                else
+                    it = new Intent(context, OfferDetail.class);
                 Bundle b = new Bundle();
                 b.putSerializable("offer", offer);
                 it.putExtras(b);
@@ -71,6 +72,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
     public int getItemCount() {
         return data.size();
     }
+
     class OfferHolder extends RecyclerView.ViewHolder {
 
         TextView category, description, timerequired, perHourCharge;
@@ -82,7 +84,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
             description = itemView.findViewById(R.id.description);
             timerequired = itemView.findViewById(R.id.timerequired);
             perHourCharge = itemView.findViewById(R.id.perHourCharge);
-            mainCard=itemView.findViewById(R.id.offer_item);
+            mainCard = itemView.findViewById(R.id.offer_item);
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.servicesondemand.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -77,12 +78,12 @@ public class OfferVenderDetail extends AppCompatActivity {
         budget.setText(offer.getBudgetOffered() + "Rs");
         time.setText(offer.getTimeRequired() + "Minutes");
         description.setText(offer.getDescription());
-        loading.setVisibility(View.VISIBLE);
-        main.setVisibility(View.GONE);
         loadUserDetail();
     }
 
     private void loadUserDetail() {
+        loading.setVisibility(View.VISIBLE);
+        main.setVisibility(View.GONE);
         listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -99,7 +100,6 @@ public class OfferVenderDetail extends AppCompatActivity {
                     loading.setVisibility(View.GONE);
                     main.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
@@ -110,6 +110,21 @@ public class OfferVenderDetail extends AppCompatActivity {
             }
         };
         reference.child(offer.getUserId()).addValueEventListener(listener);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                break;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
