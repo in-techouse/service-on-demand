@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Offer;
+import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +32,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class OfferDetail extends AppCompatActivity {
     private static final String TAG = "OfferDetail";
     private Offer offer;
+    private Post post;
     private TextView budget, time, description, phoneNumber, name, email;
     private Button acceptOffer;
     private Helpers helpers;
@@ -40,7 +42,6 @@ public class OfferDetail extends AppCompatActivity {
     private ValueEventListener listener;
     private User vendor;
     protected CircleImageView image;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +63,14 @@ public class OfferDetail extends AppCompatActivity {
         }
 
         offer = (Offer) bundle.getSerializable("offer");
+        post = (Post) bundle.getSerializable("post");
 
-        if (offer == null) {
-            Log.e(TAG, "Offer is null");
+        if (offer == null || post == null) {
+            Log.e(TAG, "Offer or Post is null");
             finish();
             return;
         }
+
         time = findViewById(R.id.time);
         budget = findViewById(R.id.budget);
         description = findViewById(R.id.description);
@@ -80,6 +83,11 @@ public class OfferDetail extends AppCompatActivity {
         email = findViewById(R.id.email);
         acceptOffer = findViewById(R.id.acceptOffer);
 
+        if (!post.getStatus().equalsIgnoreCase("Posted")) {
+            acceptOffer.setVisibility(View.GONE);
+        }
+
+
         acceptOffer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,25 +99,30 @@ public class OfferDetail extends AppCompatActivity {
                 loading.setVisibility(View.VISIBLE);
                 main.setVisibility(View.GONE);
                 offer.setStatus("Accepted");
-                reference.child("Offers").child(offer.getId()).setValue(offer).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        loading.setVisibility(View.GONE);
-                        main.setVisibility(View.VISIBLE);
-                        helpers.showSuccess(OfferDetail.this, "OFFER_ACCEPTED", "OFFER ACCEPTED SUCCESFULLY");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        loading.setVisibility(View.VISIBLE);
-                        main.setVisibility(View.GONE);
-                        helpers.showError(OfferDetail.this, "ERROR", "SOMETHING WENT WRONG PLEASE CHECK AGAIN LATER");
-                    }
-                });
+                post.setStatus("Accepted");
+                reference.child("Offers").child(offer.getId()).setValue(offer)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                reference.child("Jobs").child(post.getId()).setValue(post);
+
+                                loading.setVisibility(View.GONE);
+                                main.setVisibility(View.VISIBLE);
+                                helpers.showSuccess(OfferDetail.this, "OFFER ACCEPTED", "Your accepetd the offer of " + vendor.getFirstName());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                loading.setVisibility(View.VISIBLE);
+                                main.setVisibility(View.GONE);
+                                helpers.showError(OfferDetail.this, "ERROR", "SOMETHING WENT WRONG PLEASE CHECK AGAIN LATER");
+                            }
+                        });
 
             }
         });
-
 
 
         budget.setText(offer.getBudgetOffered() + " RS");
@@ -122,7 +135,6 @@ public class OfferDetail extends AppCompatActivity {
     private void loadVendorDetail() {
         loading.setVisibility(View.VISIBLE);
         main.setVisibility(View.GONE);
-
 
         listener = new ValueEventListener() {
             @Override
@@ -142,7 +154,6 @@ public class OfferDetail extends AppCompatActivity {
                     main.setVisibility(View.VISIBLE);
                 }
             }
-
 
 
             @Override

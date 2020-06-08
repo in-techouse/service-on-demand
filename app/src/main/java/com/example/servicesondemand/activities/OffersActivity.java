@@ -18,6 +18,7 @@ import com.example.servicesondemand.adapter.PostAdapter;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Offer;
+import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,7 +56,7 @@ public class OffersActivity extends AppCompatActivity {
         offers = new ArrayList<>();
 
         myOffersList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new OfferAdapter(getApplicationContext(), user.getType());
+        adapter = new OfferAdapter(getApplicationContext(), user.getType(), new Post());
         myOffersList.setAdapter(adapter);
         loadMyOffers();
     }

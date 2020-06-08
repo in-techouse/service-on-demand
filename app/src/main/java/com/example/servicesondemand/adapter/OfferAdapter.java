@@ -16,6 +16,7 @@ import com.example.servicesondemand.R;
 import com.example.servicesondemand.activities.OfferDetail;
 import com.example.servicesondemand.activities.OfferVenderDetail;
 import com.example.servicesondemand.model.Offer;
+import com.example.servicesondemand.model.Post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,13 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
     private List<Offer> data;
     private Context context;
     private int type;
+    private Post post;
 
-    public OfferAdapter(Context c, int t) {
+    public OfferAdapter(Context c, int t, Post p) {
         data = new ArrayList<>();
         context = c;
         type = t;
+        post = p;
     }
 
     public void setData(List<Offer> data) {
@@ -61,6 +64,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
                     it = new Intent(context, OfferDetail.class);
                 Bundle b = new Bundle();
                 b.putSerializable("offer", offer);
+                b.putSerializable("post", post);
                 it.putExtras(b);
                 it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);

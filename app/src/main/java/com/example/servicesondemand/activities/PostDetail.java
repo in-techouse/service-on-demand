@@ -196,7 +196,7 @@ public class PostDetail extends AppCompatActivity {
             linearLayout.setOrientation(LinearLayoutManager.VERTICAL);
             linearLayout.setAutoMeasureEnabled(true);
             offersList.setLayoutManager(linearLayout);
-            adapter = new OfferAdapter(getApplicationContext(), user.getType());
+            adapter = new OfferAdapter(getApplicationContext(), user.getType(), post);
             offersList.setAdapter(adapter);
             loadMyOffers();
         } else {
