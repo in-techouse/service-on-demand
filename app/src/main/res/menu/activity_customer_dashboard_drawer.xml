@@ -17,6 +17,10 @@
             android:icon="@drawable/bell"
             android:title="My Notifications" />
         <item
+            android:id="@+id/nav_complains"
+            android:icon="@drawable/bell"
+            android:title="My Complains" />
+        <item
             android:id="@+id/nav_edit_profile"
             android:icon="@drawable/blog"
             android:title="Edit Profile" />

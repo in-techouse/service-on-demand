@@ -51,7 +51,6 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
     private ValueEventListener eventListener;
     private List<Post> posts;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,17 +199,10 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
-        finish();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                finish();
-                break;
-            }
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
-        return true;
     }
 }

@@ -20,12 +20,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".activities.OfferVenderDetail"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/googleKey" />
 
+        <activity
+            android:name=".activities.MyComplains"
+            android:parentActivityName=".activities.CustomerDashboard"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.SubmitComplain"
+            android:parentActivityName=".activities.PostDetail"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.OfferVenderDetail"
+            android:parentActivityName=".activities.OffersActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.OffersActivity"
             android:parentActivityName=".activities.VendorDashboard"

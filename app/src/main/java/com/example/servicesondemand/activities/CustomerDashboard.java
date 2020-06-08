@@ -147,6 +147,11 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
                 break;
             }
+            case R.id.nav_complains: {
+                Intent intent = new Intent(CustomerDashboard.this, MyComplains.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.nav_edit_profile: {
                 Intent intent = new Intent(CustomerDashboard.this, EditProfile.class);
                 startActivity(intent);
@@ -173,6 +178,15 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         super.onDestroy();
         if (eventListener != null) {
             reference.removeEventListener(eventListener);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }

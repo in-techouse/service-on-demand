@@ -1,9 +1,5 @@
 package com.example.servicesondemand.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +7,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
@@ -82,6 +81,7 @@ public class OfferVenderDetail extends AppCompatActivity {
         main.setVisibility(View.GONE);
         loadUserDetail();
     }
+
     private void loadUserDetail() {
         listener = new ValueEventListener() {
             @Override
@@ -89,7 +89,7 @@ public class OfferVenderDetail extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     customer = dataSnapshot.getValue(User.class);
                     if (customer != null) {
-                        name.setText(customer.getFirstName() + "" + customer.getLastName());
+                        name.setText(customer.getFirstName() + " " + customer.getLastName());
                         phonenumber.setText(customer.getPhone());
                         email.setText(customer.getEmail());
                         if (customer.getImage() != null && customer.getImage().length() > 0) {
