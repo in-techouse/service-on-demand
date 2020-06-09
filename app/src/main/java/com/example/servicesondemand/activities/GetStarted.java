@@ -41,9 +41,7 @@ public class GetStarted extends AppCompatActivity {
     private ValueEventListener valueEventListener;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
     private FirebaseAuth mAuth;
-
     private ProgressDialog loadingBar;
-
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private Helpers helpers;
