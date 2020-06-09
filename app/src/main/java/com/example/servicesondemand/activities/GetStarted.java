@@ -47,6 +47,7 @@ public class GetStarted extends AppCompatActivity {
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private Helpers helpers;
+    private ValueEventListener listener;
     private boolean isCodeSent = false;
 
 
