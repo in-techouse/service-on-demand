@@ -158,10 +158,13 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e("MyPosts", "Data Snap Shot: " + dataSnapshot.toString());
                 posts.clear(); // Remove data, to avoid duplication
+                boolean flag = false;
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     Post p = d.getValue(Post.class);
                     if (p != null && p.getStatus().equals("Posted")) {
                         posts.add(p);
+                        if (p.getOffers() == 0)
+                            flag = true;
                     }
                 }
                 Collections.reverse(posts); // Reverse the data list, to display the latest booking on top.
@@ -177,6 +180,9 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
                 }
                 loading.setVisibility(View.GONE);
                 adapter.setData(posts);
+                if (flag) {
+                    helpers.showNotification(VendorDashboard.this, "NEW JOB FOUND", "We have got a new job for you");
+                }
             }
 
             @Override
@@ -194,7 +200,7 @@ public class VendorDashboard extends AppCompatActivity implements NavigationView
     protected void onDestroy() {
         super.onDestroy();
         if (eventListener != null)
-            reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(eventListener);
+            reference.orderByChild("category").equalTo(user.getCategory()).removeEventListener(eventListener);
     }
 
     @Override

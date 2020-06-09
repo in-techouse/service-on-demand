@@ -44,18 +44,12 @@ public class PostDetail extends AppCompatActivity {
     private static final String TAG = "PostDetail";
     private EditText Response, PerHourCharge, JobTime;
     private String strResponse, strPerHourCharge, strJobTime;
-    private Button SendResponse;
-    private Session session;
-    private User user;
+    private User user, jobOwner;
     private Helpers helpers;
     private Post post;
-    private SliderLayout slider;
-    private TextView date, time, offers, category, status, address, description;
     private ProgressDialog loadingBar;
-    private LinearLayout sendOffer;
-    private RecyclerView offersList;
-    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Offers");
-    private ValueEventListener eventListener;
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+    private ValueEventListener eventListener, jobOwnerListener;
     private OfferAdapter adapter;
     private List<Offer> jobOffers;
 
@@ -92,16 +86,16 @@ public class PostDetail extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
 
         jobOffers = new ArrayList<>();
-        SendResponse = findViewById(R.id.sendresponse);
+        Button sendResponse = findViewById(R.id.sendresponse);
         Response = findViewById(R.id.response);
         PerHourCharge = findViewById(R.id.perHourCharge);
         JobTime = findViewById(R.id.jobtime);
-        sendOffer = findViewById(R.id.sendOffer);
-        offersList = findViewById(R.id.offersList);
+        LinearLayout sendOffer = findViewById(R.id.sendOffer);
+        RecyclerView offersList = findViewById(R.id.offersList);
 
         helpers = new Helpers();
 
-        SendResponse.setOnClickListener(new View.OnClickListener() {
+        sendResponse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.e("PostDetail", "On Click");
@@ -122,8 +116,7 @@ public class PostDetail extends AppCompatActivity {
                     loadingBar.setCancelable(false);
                     loadingBar.show();
                     Offer offer = new Offer();
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Offers");
-                    String id = reference.push().getKey();
+                    String id = reference.child("Offers").push().getKey();
                     offer.setId(id);
                     offer.setWorkerId(user.getId());
                     offer.setUserId(post.getUserId());
@@ -132,10 +125,21 @@ public class PostDetail extends AppCompatActivity {
                     offer.setJobId(post.getId());
                     offer.setStatus("Sent");
                     offer.setTimeRequired(Integer.parseInt(strJobTime));
-                    reference.child(offer.getId()).setValue(offer)
+                    reference.child("Offers").child(offer.getId()).setValue(offer)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+                                    post.setOffers(post.getOffers() + 1);
+                                    reference.child("Jobs").child(post.getId()).setValue(post);
+                                    if (jobOwner != null) {
+                                        String userText = "You have received an offer from " + user.getFirstName() + " " + user.getLastName();
+                                        String workerText = "You submitted an offer on the job of " + jobOwner.getFirstName() + " " + jobOwner.getLastName();
+                                        helpers.sendNotification(jobOwner.getId(), userText, user.getId(), workerText, post.getId());
+                                    } else {
+                                        String userText = "You have received an offer from " + user.getFirstName() + " " + user.getLastName();
+                                        String workerText = "You submitted an offer on the job";
+                                        helpers.sendNotification("", userText, user.getId(), workerText, post.getId());
+                                    }
                                     loadingBar.dismiss();
                                     helpers.showSuccess(PostDetail.this, "Offer POSTED!", "Your Offer has been posted successfully.");
                                 }
@@ -147,15 +151,14 @@ public class PostDetail extends AppCompatActivity {
                                     helpers.showError(PostDetail.this, "ERROR!", "Offer not posted.\nSomething went wrong.\nPlease try again later,");
                                 }
                             });
-
                 }
             }
         });
 
-        session = new Session(getApplicationContext());
+        Session session = new Session(getApplicationContext());
         user = session.getUser();
 
-        slider = findViewById(R.id.slider);
+        SliderLayout slider = findViewById(R.id.slider);
         slider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         slider.setCustomAnimation(new DescriptionAnimation());
@@ -171,13 +174,13 @@ public class PostDetail extends AppCompatActivity {
             slider.addSlider(textSliderView);
         }
 
-        date = findViewById(R.id.date);
-        time = findViewById(R.id.time);
-        offers = findViewById(R.id.offers);
-        category = findViewById(R.id.category);
-        status = findViewById(R.id.status);
-        address = findViewById(R.id.address);
-        description = findViewById(R.id.description);
+        TextView date = findViewById(R.id.date);
+        TextView time = findViewById(R.id.time);
+        TextView offers = findViewById(R.id.offers);
+        TextView category = findViewById(R.id.category);
+        TextView status = findViewById(R.id.status);
+        TextView address = findViewById(R.id.address);
+        TextView description = findViewById(R.id.description);
 
         date.setText(post.getDate());
         time.setText(post.getTime());
@@ -194,7 +197,6 @@ public class PostDetail extends AppCompatActivity {
             sendOffer.setVisibility(View.GONE);
             LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext());
             linearLayout.setOrientation(LinearLayoutManager.VERTICAL);
-            linearLayout.setAutoMeasureEnabled(true);
             offersList.setLayoutManager(linearLayout);
             adapter = new OfferAdapter(getApplicationContext(), user.getType(), post);
             offersList.setAdapter(adapter);
@@ -203,10 +205,46 @@ public class PostDetail extends AppCompatActivity {
             offersList.setVisibility(View.GONE);
             if (post.getStatus().equalsIgnoreCase("Posted") && post.getWorkerId().length() < 1) {
                 sendOffer.setVisibility(View.VISIBLE);
+                Response.setFocusable(false);
+                PerHourCharge.setFocusable(false);
+                JobTime.setFocusable(false);
+                loadJobOwner();
             } else {
                 sendOffer.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void loadJobOwner() {
+        jobOwnerListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (jobOwnerListener != null)
+                    reference.child("Users").child(post.getUserId()).addValueEventListener(jobOwnerListener);
+                Response.setFocusable(true);
+                Response.setFocusableInTouchMode(true);
+                PerHourCharge.setFocusable(true);
+                PerHourCharge.setFocusableInTouchMode(true);
+                JobTime.setFocusable(true);
+                JobTime.setFocusableInTouchMode(true);
+                if (dataSnapshot.exists()) {
+                    jobOwner = dataSnapshot.getValue(User.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (jobOwnerListener != null)
+                    reference.child("Users").child(post.getUserId()).addValueEventListener(jobOwnerListener);
+                Response.setFocusable(true);
+                Response.setFocusableInTouchMode(true);
+                PerHourCharge.setFocusable(true);
+                PerHourCharge.setFocusableInTouchMode(true);
+                JobTime.setFocusable(true);
+                JobTime.setFocusableInTouchMode(true);
+            }
+        };
+        reference.child("Users").child(post.getUserId()).addValueEventListener(jobOwnerListener);
     }
 
     private void loadMyOffers() {
@@ -219,7 +257,7 @@ public class PostDetail extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (eventListener != null)
-                    reference.orderByChild("jobId").equalTo(post.getId()).removeEventListener(eventListener);
+                    reference.child("Offers").orderByChild("jobId").equalTo(post.getId()).removeEventListener(eventListener);
                 Log.e("PostDetail", "Data Snap Shot: " + dataSnapshot.toString());
                 jobOffers.clear(); // Remove data, to avoid duplication
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
@@ -234,12 +272,12 @@ public class PostDetail extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 if (eventListener != null)
-                    reference.orderByChild("jobId").equalTo(post.getId()).removeEventListener(eventListener);
+                    reference.child("Offers").orderByChild("jobId").equalTo(post.getId()).removeEventListener(eventListener);
 
             }
         };
 
-        reference.orderByChild("jobId").equalTo(post.getId()).addValueEventListener(eventListener);
+        reference.child("Offers").orderByChild("jobId").equalTo(post.getId()).addValueEventListener(eventListener);
     }
 
     private boolean isValid() {

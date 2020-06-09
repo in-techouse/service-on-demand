@@ -39,6 +39,7 @@ public class MyNotifications extends AppCompatActivity {
     private ValueEventListener eventListener;
     private List<Notification> notifications;
     private NotificationAdapter adapter;
+    private String orderBy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +51,19 @@ public class MyNotifications extends AppCompatActivity {
         noRecordFound = findViewById(R.id.noRecordFound);
 
         session = new Session(getApplicationContext());
-
-        notificationsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new NotificationAdapter();
-        notificationsList.setAdapter(adapter);
-
         user = session.getUser();
         helpers = new Helpers();
         notifications = new ArrayList<>();
+
+        notificationsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new NotificationAdapter(user.getType());
+        notificationsList.setAdapter(adapter);
+
+        if (user.getType() == 0) {
+            orderBy = "userId";
+        } else {
+            orderBy = "workerId";
+        }
         loadNotifications();
     }
 
@@ -106,14 +112,14 @@ public class MyNotifications extends AppCompatActivity {
             }
         };
 
-        reference.orderByChild("userId").equalTo(user.getId()).addValueEventListener(eventListener);
+        reference.orderByChild(orderBy).equalTo(user.getId()).addValueEventListener(eventListener);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (eventListener != null)
-            reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(eventListener);
+            reference.orderByChild(orderBy).equalTo(user.getId()).removeEventListener(eventListener);
     }
 
     @Override

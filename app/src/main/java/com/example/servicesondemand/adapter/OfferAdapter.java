@@ -53,7 +53,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
         final Offer offer = data.get(position);
         holder.description.setText(offer.getDescription());
         holder.perHourCharge.setText(offer.getBudgetOffered() + " RS.");
-        holder.timerequired.setText(offer.getTimeRequired() + "");
+        holder.timerequired.setText(offer.getTimeRequired() + " Minutes");
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

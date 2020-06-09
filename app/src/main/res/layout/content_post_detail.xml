@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.PostDetail"
     tools:showIn="@layout/activity_post_detail">
@@ -303,11 +305,14 @@
                     android:id="@+id/response"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
-                    android:hint="Enter your respose here."
-                    android:inputType="text"
+                    android:hint="Your response"
+                    android:inputType="textMultiLine"
+                    android:maxLines="7"
+                    android:minLines="3"
                     android:textColor="#BBBABA"
                     android:textSize="14dp" />
 
@@ -318,7 +323,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
-                    android:hint="Enter your per hour charge."
+                    android:hint="Your per hour charge."
                     android:inputType="number"
                     android:textColor="#BBBABA"
                     android:textSize="14dp" />
@@ -330,7 +335,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
-                    android:hint="Enter the time required to complete the job (in minutes)"
+                    android:hint="Time required to complete the job (in minutes)"
                     android:inputType="time"
                     android:textColor="#BBBABA"
                     android:textSize="14dp" />
@@ -341,6 +346,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/post_description"
                     android:layout_gravity="bottom"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="7dp"
                     android:background="@color/colorPrimaryDark"
                     android:text="Post"
                     android:textColor="#ffff" />

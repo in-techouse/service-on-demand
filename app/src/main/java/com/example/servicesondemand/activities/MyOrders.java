@@ -39,6 +39,7 @@ public class MyOrders extends AppCompatActivity {
     private ValueEventListener eventListener;
     private List<Post> orders;
     private PostAdapter adapter;
+    private String orderBy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,11 @@ public class MyOrders extends AppCompatActivity {
         user = session.getUser();
         helpers = new Helpers();
         orders = new ArrayList<>();
+        if (user.getType() == 0) {
+            orderBy = "userId";
+        } else {
+            orderBy = "workerId";
+        }
         loadOrders();
     }
 
@@ -105,7 +111,7 @@ public class MyOrders extends AppCompatActivity {
             }
         };
 
-        reference.orderByChild("userId").equalTo(user.getId()).addValueEventListener(eventListener);
+        reference.orderByChild(orderBy).equalTo(user.getId()).addValueEventListener(eventListener);
     }
 
 
@@ -113,7 +119,7 @@ public class MyOrders extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (eventListener != null)
-            reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(eventListener);
+            reference.orderByChild(orderBy).equalTo(user.getId()).removeEventListener(eventListener);
     }
 
     @Override

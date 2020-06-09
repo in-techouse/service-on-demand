@@ -3,6 +3,7 @@ package com.example.servicesondemand.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +16,11 @@ import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationHolder> {
     private List<Notification> data;
+    private int type;
 
-    public NotificationAdapter() {
+    public NotificationAdapter(int t) {
         data = new ArrayList<>();
+        type = t;
     }
 
     public void setData(List<Notification> data) {
@@ -35,6 +38,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull NotificationHolder holder, int position) {
         final Notification notification = data.get(position);
+        if (type == 0) {
+            holder.notification.setText(notification.getUserText());
+        } else {
+            holder.notification.setText(notification.getWorkerText());
+        }
+        holder.dateTime.setText(notification.getDateTime());
     }
 
     @Override
@@ -43,9 +52,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class NotificationHolder extends RecyclerView.ViewHolder {
+        TextView notification, dateTime;
 
         NotificationHolder(@NonNull View itemView) {
             super(itemView);
+            notification = itemView.findViewById(R.id.notification);
+            dateTime = itemView.findViewById(R.id.dateTime);
         }
     }
 }
