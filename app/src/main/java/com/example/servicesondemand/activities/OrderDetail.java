@@ -23,18 +23,22 @@ import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.MaterialDialog;
+import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class OrderDetail extends AppCompatActivity {
     private static final String TAG = "OrderDetail";
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    private ValueEventListener listener;
+    private ValueEventListener listener, jobListener;
     private Helpers helpers;
     private User user, otherUser;
     private Post post;
@@ -123,16 +127,24 @@ public class OrderDetail extends AppCompatActivity {
         main = findViewById(R.id.main);
         if (user.getType() == 1) {
             detailLabel.setText("CUSTOMER DETAILS");
+        }
+        if (post.getStatus().equalsIgnoreCase("Accepted")) {
+            if (user.getType() == 0) {
+                markCompleteJob.setVisibility(View.GONE);
+            }
+            activateJobListener();
         } else {
             markCompleteJob.setVisibility(View.GONE);
+            cancelJob.setVisibility(View.GONE);
         }
+
         loadOtherUserDetail();
 
 
         cancelJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                cancelConfirmation();
             }
         });
 
@@ -142,6 +154,96 @@ public class OrderDetail extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void cancelConfirmation() {
+        MaterialDialog mDialog = new MaterialDialog.Builder(OrderDetail.this)
+                .setTitle("ARE YOU SURE?")
+                .setMessage("Are you sure to cancel the job with " + otherUser.getFirstName() + " " + otherUser.getLastName())
+                .setCancelable(false)
+                .setPositiveButton("YES", R.drawable.ok, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                        cancelJob();
+                    }
+                })
+                .setNegativeButton("NO!", R.drawable.cancel, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .build();
+
+        // Show Dialog
+        mDialog.show();
+    }
+
+    private void cancelJob() {
+        loading.setVisibility(View.VISIBLE);
+        main.setVisibility(View.GONE);
+        post.setStatus("Cancelled");
+        reference.child("Jobs").child(post.getId()).setValue(post)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String userId = "";
+                        String userText = "";
+                        String workerId = "";
+                        String workerText = "";
+                        if (user.getType() == 0) {
+                            userId = user.getId();
+                            userText = "You cancelled your job with " + otherUser.getFirstName() + " " + otherUser.getLastName();
+                            workerId = otherUser.getId();
+                            workerText = "The job owner " + user.getFirstName() + " " + user.getLastName() + " cancelled the job.";
+                        } else {
+                            userId = otherUser.getId();
+                            userText = "The vendor " + user.getFirstName() + " " + user.getLastName() + " cancelled the job.";
+                            workerId = user.getId();
+                            workerText = "You cancelled your job with " + otherUser.getFirstName() + " " + otherUser.getLastName();
+                        }
+                        helpers.sendNotification(userId, userText, workerId, workerText, post.getId());
+                        loading.setVisibility(View.GONE);
+                        main.setVisibility(View.VISIBLE);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        helpers.showError(OrderDetail.this, "ERROR", "SOMETHING WENT WRONG PLEASE TRY LATER");
+                        loading.setVisibility(View.GONE);
+                        main.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    private void activateJobListener() {
+        jobListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Post p = dataSnapshot.getValue(Post.class);
+                    if (p != null) {
+                        post = p;
+                        switch (post.getStatus()) {
+                            case "Cancelled": {
+                                helpers.showSuccess(OrderDetail.this, "JOB CANCELLED", "The job has been cancelled");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        reference.child("Jobs").child(post.getId()).addValueEventListener(jobListener);
     }
 
     private void loadOtherUserDetail() {
@@ -191,6 +293,13 @@ public class OrderDetail extends AppCompatActivity {
         else
             reference.child("Users").child(post.getUserId()).addValueEventListener(listener);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (jobListener != null)
+            reference.child("Jobs").child(post.getId()).removeEventListener(jobListener);
     }
 
     @Override
