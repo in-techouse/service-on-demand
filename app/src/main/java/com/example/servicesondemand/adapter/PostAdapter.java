@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.activities.OrderDetail;
 import com.example.servicesondemand.activities.PostDetail;
 import com.example.servicesondemand.model.Post;
 
@@ -46,7 +47,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostHolder holder, final int position) {
         final Post post = data.get(position);
         Glide.with(context).load(post.getImages().get(0)).into(holder.image);
         holder.category.setText(post.getCategory());
@@ -64,7 +65,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(context, PostDetail.class);
+                Intent it;
+                if (post.getStatus().equalsIgnoreCase("Posted")) {
+                    it = new Intent(context, PostDetail.class);
+                } else {
+                    it = new Intent(context, OrderDetail.class);
+                }
                 it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("post", post);
