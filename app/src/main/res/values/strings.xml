@@ -24,4 +24,6 @@
     <string name="title_activity_post_detail">Job Detail</string>
     <string name="title_activity_post_detail_and_send_offer">PostDetailAndSendOffer</string>
     <string name="title_activity_order_detail">Order Detail</string>
+    <string name="cancel_job">CANCEL JOB</string>
+    <string name="mark_complete">MARK COMPLETE</string>
 </resources>

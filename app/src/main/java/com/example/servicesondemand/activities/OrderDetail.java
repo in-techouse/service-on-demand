@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
@@ -39,7 +40,8 @@ public class OrderDetail extends AppCompatActivity {
     private Post post;
     private LinearLayout loading, main;
     protected CircleImageView image;
-    private TextView detailLabel, phoneNumber, name, email;
+    private TextView phoneNumber, name, email;
+    private AppCompatButton cancelJob, markCompleteJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,18 +111,37 @@ public class OrderDetail extends AppCompatActivity {
             slider.addSlider(textSliderView);
         }
 
-        detailLabel = findViewById(R.id.detailLabel);
+        TextView detailLabel = findViewById(R.id.detailLabel);
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         phoneNumber = findViewById(R.id.phoneNumber);
         email = findViewById(R.id.email);
+        cancelJob = findViewById(R.id.cancelJob);
+        markCompleteJob = findViewById(R.id.markCompleteJob);
 
         loading = findViewById(R.id.loading);
         main = findViewById(R.id.main);
         if (user.getType() == 1) {
             detailLabel.setText("CUSTOMER DETAILS");
+        } else {
+            markCompleteJob.setVisibility(View.GONE);
         }
         loadOtherUserDetail();
+
+
+        cancelJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        markCompleteJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void loadOtherUserDetail() {

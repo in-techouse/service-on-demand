@@ -31,7 +31,6 @@
                 android:layout_gravity="center" />
 
             <TextView
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Loading Detail.\nPlease wait..."
@@ -42,8 +41,7 @@
             android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="80dp">
+            android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
@@ -375,6 +373,27 @@
                     android:text="Job Description"
                     android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/cancelJob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
+                android:background="@color/colorDanger"
+                android:text="@string/cancel_job"
+                android:textColor="@color/colorWhite" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/markCompleteJob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/mark_complete"
+                android:textColor="@color/colorWhite" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
