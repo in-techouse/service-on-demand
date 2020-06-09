@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.director.Helpers;
+import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Offer;
 import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
@@ -40,7 +41,7 @@ public class OfferDetail extends AppCompatActivity {
     private LinearLayout loading;
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     private ValueEventListener listener;
-    private User vendor;
+    private User vendor, user;
     protected CircleImageView image;
 
     @Override
@@ -71,6 +72,9 @@ public class OfferDetail extends AppCompatActivity {
             return;
         }
 
+        Session session = new Session(getApplicationContext());
+        user = session.getUser();
+
         time = findViewById(R.id.time);
         budget = findViewById(R.id.budget);
         description = findViewById(R.id.description);
@@ -87,7 +91,6 @@ public class OfferDetail extends AppCompatActivity {
             acceptOffer.setVisibility(View.GONE);
         }
 
-
         acceptOffer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,13 +103,15 @@ public class OfferDetail extends AppCompatActivity {
                 main.setVisibility(View.GONE);
                 offer.setStatus("Accepted");
                 post.setStatus("Accepted");
+                post.setWorkerId(vendor.getId());
                 reference.child("Offers").child(offer.getId()).setValue(offer)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-
                                 reference.child("Jobs").child(post.getId()).setValue(post);
-
+                                String userText = "You accepted the offer of " + vendor.getFirstName() + " " + vendor.getLastName();
+                                String workerText = "Your offer has been accepetd by " + user.getFirstName() + " " + user.getLastName();
+                                helpers.sendNotification(user.getId(), userText, vendor.getId(), workerText, post.getId());
                                 loading.setVisibility(View.GONE);
                                 main.setVisibility(View.VISIBLE);
                                 helpers.showSuccess(OfferDetail.this, "OFFER ACCEPTED", "Your accepetd the offer of " + vendor.getFirstName());
@@ -139,6 +144,9 @@ public class OfferDetail extends AppCompatActivity {
         listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (listener != null)
+                    reference.child("Users").child(offer.getWorkerId()).removeEventListener(listener);
+
                 if (dataSnapshot.exists()) {
                     vendor = dataSnapshot.getValue(User.class);
 
@@ -158,6 +166,9 @@ public class OfferDetail extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (listener != null)
+                    reference.child("Users").child(offer.getWorkerId()).removeEventListener(listener);
+
                 loading.setVisibility(View.GONE);
                 main.setVisibility(View.VISIBLE);
                 helpers.showError(OfferDetail.this, "ERROR", "SOMETHING WENT WRONG PLEASE TRY LATER");
