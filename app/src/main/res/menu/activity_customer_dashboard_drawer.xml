@@ -18,7 +18,7 @@
             android:title="My Notifications" />
         <item
             android:id="@+id/nav_complains"
-            android:icon="@drawable/bell"
+            android:icon="@drawable/complain"
             android:title="My Complains" />
         <item
             android:id="@+id/nav_edit_profile"

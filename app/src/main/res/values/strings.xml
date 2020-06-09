@@ -112,4 +112,5 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_post_detail_and_send_offer">PostDetailAndSendOffer</string>
+    <string name="title_activity_order_detail">OrderDetail</string>
 </resources>
