@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class MyOrders extends AppCompatActivity {
-
     private RecyclerView ordersList;
     private LinearLayout loading;
     private TextView noRecordFound;

@@ -29,7 +29,6 @@ public class SubmitComplain extends AppCompatActivity {
     private static final String TAG = "SubmitComplaint";
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Complains");
     private EditText description;
-    private Button submit;
     private Helpers helpers;
     private User user, vendor;
     private Post post;
@@ -70,7 +69,7 @@ public class SubmitComplain extends AppCompatActivity {
         dialog = new ProgressDialog(this);
 
         description = findViewById(R.id.description);
-        submit = findViewById(R.id.submit);
+        Button submit = findViewById(R.id.submit);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

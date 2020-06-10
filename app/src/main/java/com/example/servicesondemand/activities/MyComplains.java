@@ -30,7 +30,6 @@ public class MyComplains extends AppCompatActivity {
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Complains");
     private ValueEventListener listener;
     private Helpers helpers;
-    private Session session;
     private User user;
     private RecyclerView complainsList;
     private LinearLayout loading;
@@ -44,7 +43,7 @@ public class MyComplains extends AppCompatActivity {
         setContentView(R.layout.activity_my_complains);
 
         helpers = new Helpers();
-        session = new Session(getApplicationContext());
+        Session session = new Session(getApplicationContext());
         user = session.getUser();
         complainsList = findViewById(R.id.complainsList);
         loading = findViewById(R.id.loading);

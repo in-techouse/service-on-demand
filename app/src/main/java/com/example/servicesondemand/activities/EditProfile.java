@@ -45,10 +45,12 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
     };
-    private TextInputLayout perHourChargeUpper, categoryUpper;
-    private EditText firstName, lastName, email, mobile, category, perHourCharge;
+    private TextInputLayout perHourChargeUpper;
+    private EditText firstName;
+    private EditText lastName;
+    private EditText email;
+    private EditText perHourCharge;
     private String strFirstName, strLastName, strEmail, strPerHourCharge;
-    private Button update;
     private Helpers helpers;
     private Session session;
     private User user;
@@ -67,16 +69,16 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        update = findViewById(R.id.update);
+        Button update = findViewById(R.id.update);
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         email = findViewById(R.id.email);
-        mobile = findViewById(R.id.mobile);
-        category = findViewById(R.id.category);
+        EditText mobile = findViewById(R.id.mobile);
+        EditText category = findViewById(R.id.category);
         perHourCharge = findViewById(R.id.perHourCharge);
         image = findViewById(R.id.image);
         perHourChargeUpper = findViewById(R.id.perHourChargeUpper);
-        categoryUpper = findViewById(R.id.categoryUpper);
+        TextInputLayout categoryUpper = findViewById(R.id.categoryUpper);
 
         fab.setOnClickListener(this);
         update.setOnClickListener(this);

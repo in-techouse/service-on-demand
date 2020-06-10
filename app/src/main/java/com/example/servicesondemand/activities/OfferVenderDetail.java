@@ -28,7 +28,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class OfferVenderDetail extends AppCompatActivity {
     private static final String TAG = "OfferDetail";
     private Offer offer;
-    private TextView time, budget, description, name, phonenumber, email;
+    private TextView name;
+    private TextView phonenumber;
+    private TextView email;
     private LinearLayout loading;
     private ScrollView main;
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -63,9 +65,9 @@ public class OfferVenderDetail extends AppCompatActivity {
             return;
         }
 
-        time = findViewById(R.id.time);
-        budget = findViewById(R.id.budget);
-        description = findViewById(R.id.description);
+        TextView time = findViewById(R.id.time);
+        TextView budget = findViewById(R.id.budget);
+        TextView description = findViewById(R.id.description);
         loading = findViewById(R.id.loading);
         main = findViewById(R.id.main);
         helpers = new Helpers();
@@ -87,6 +89,8 @@ public class OfferVenderDetail extends AppCompatActivity {
         listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (listener != null)
+                    reference.child(offer.getUserId()).removeEventListener(listener);
                 if (dataSnapshot.exists()) {
                     customer = dataSnapshot.getValue(User.class);
                     if (customer != null) {
@@ -104,6 +108,8 @@ public class OfferVenderDetail extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (listener != null)
+                    reference.child(offer.getUserId()).removeEventListener(listener);
                 loading.setVisibility(View.GONE);
                 main.setVisibility(View.VISIBLE);
                 helpers.showError(OfferVenderDetail.this, "ERROR!", "Something went wrong please try again later.");

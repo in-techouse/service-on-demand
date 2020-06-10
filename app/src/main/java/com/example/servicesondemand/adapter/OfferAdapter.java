@@ -78,10 +78,8 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferHolder>
     }
 
     class OfferHolder extends RecyclerView.ViewHolder {
-
         TextView category, description, timerequired, perHourCharge;
         CardView mainCard;
-
 
         OfferHolder(@NonNull View itemView) {
             super(itemView);

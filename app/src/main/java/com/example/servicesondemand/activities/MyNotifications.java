@@ -33,7 +33,6 @@ public class MyNotifications extends AppCompatActivity {
     private LinearLayout loading;
     private TextView noRecordFound;
     private Helpers helpers;
-    private Session session;
     private User user;
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Notifications");
     private ValueEventListener eventListener;
@@ -50,7 +49,7 @@ public class MyNotifications extends AppCompatActivity {
         loading = findViewById(R.id.loading);
         noRecordFound = findViewById(R.id.noRecordFound);
 
-        session = new Session(getApplicationContext());
+        Session session = new Session(getApplicationContext());
         user = session.getUser();
         helpers = new Helpers();
         notifications = new ArrayList<>();

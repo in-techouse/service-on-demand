@@ -38,7 +38,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomerDashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    private User user;
     private Session session;
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Categories");
     private ValueEventListener eventListener;
@@ -62,7 +61,7 @@ public class CustomerDashboard extends AppCompatActivity implements NavigationVi
         toggle.syncState();
 
         session = new Session(CustomerDashboard.this);
-        user = session.getUser();
+        User user = session.getUser();
 
         View header = navigationView.getHeaderView(0);
         TextView name = header.findViewById(R.id.name);

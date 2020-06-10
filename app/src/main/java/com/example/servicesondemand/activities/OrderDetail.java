@@ -47,7 +47,6 @@ public class OrderDetail extends AppCompatActivity {
     private LinearLayout loading, main;
     protected CircleImageView image;
     private TextView phoneNumber, name, email;
-    private AppCompatButton cancelJob, markCompleteJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +123,8 @@ public class OrderDetail extends AppCompatActivity {
         image = findViewById(R.id.image);
         phoneNumber = findViewById(R.id.phoneNumber);
         email = findViewById(R.id.email);
-        cancelJob = findViewById(R.id.cancelJob);
-        markCompleteJob = findViewById(R.id.markCompleteJob);
+        AppCompatButton cancelJob = findViewById(R.id.cancelJob);
+        AppCompatButton markCompleteJob = findViewById(R.id.markCompleteJob);
 
         loading = findViewById(R.id.loading);
         main = findViewById(R.id.main);

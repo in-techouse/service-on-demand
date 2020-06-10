@@ -34,8 +34,7 @@ public class OfferDetail extends AppCompatActivity {
     private static final String TAG = "OfferDetail";
     private Offer offer;
     private Post post;
-    private TextView budget, time, description, phoneNumber, name, email;
-    private Button acceptOffer;
+    private TextView phoneNumber, name, email;
     private Helpers helpers;
     private ScrollView main;
     private LinearLayout loading;
@@ -75,9 +74,9 @@ public class OfferDetail extends AppCompatActivity {
         Session session = new Session(getApplicationContext());
         user = session.getUser();
 
-        time = findViewById(R.id.time);
-        budget = findViewById(R.id.budget);
-        description = findViewById(R.id.description);
+        TextView time = findViewById(R.id.time);
+        TextView budget = findViewById(R.id.budget);
+        TextView description = findViewById(R.id.description);
         loading = findViewById(R.id.loading);
         main = findViewById(R.id.main);
         helpers = new Helpers();
@@ -85,7 +84,7 @@ public class OfferDetail extends AppCompatActivity {
         image = findViewById(R.id.image);
         phoneNumber = findViewById(R.id.phoneNumber);
         email = findViewById(R.id.email);
-        acceptOffer = findViewById(R.id.acceptOffer);
+        Button acceptOffer = findViewById(R.id.acceptOffer);
 
         if (!post.getStatus().equalsIgnoreCase("Posted")) {
             acceptOffer.setVisibility(View.GONE);

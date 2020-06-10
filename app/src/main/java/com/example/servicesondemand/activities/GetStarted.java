@@ -3,10 +3,12 @@ package com.example.servicesondemand.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,28 +47,26 @@ public class GetStarted extends AppCompatActivity {
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private Helpers helpers;
-    private ValueEventListener listener;
     private boolean isCodeSent = false;
-
+    private TextView resend, timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_getstart);
 
-
         mAuth = FirebaseAuth.getInstance();
-
 
         InputUserPhoneNumber = (EditText) findViewById(R.id.phone_number_input);
         SendVerificationCodeButton = (Button) findViewById(R.id.send_ver_code_button);
         otpPinView = findViewById(R.id.otpPinView);
         otpMain = findViewById(R.id.otpMain);
         main = findViewById(R.id.main);
+        resend = findViewById(R.id.resend);
+        timer = findViewById(R.id.timer);
         loadingBar = new ProgressDialog(this);
 
         helpers = new Helpers();
-
 
         SendVerificationCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +128,52 @@ public class GetStarted extends AppCompatActivity {
                 otpMain.setVisibility(View.VISIBLE);
                 SendVerificationCodeButton.setText("VERIFY");
                 isCodeSent = true;
+                startTimer();
             }
         };
+
+        resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = InputUserPhoneNumber.getText().toString();
+
+                if (phoneNumber.length() != 13) {
+                    InputUserPhoneNumber.setError("Enter a valid phone number");
+                } else {
+                    InputUserPhoneNumber.setError(null);
+                    loadingBar.setTitle("Phone Verification");
+                    loadingBar.setMessage("Please wait, while we are authenticating using your phone...");
+                    loadingBar.setCanceledOnTouchOutside(false);
+                    loadingBar.show();
+                    PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, GetStarted.this, callbacks, mResendToken);
+                }
+            }
+        });
+    }
+
+    private void startTimer() {
+        resend.setEnabled(false);
+        new CountDownTimer(120000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                millisUntilFinished = millisUntilFinished / 1000;
+                long seconds = millisUntilFinished % 60;
+                long minutes = (millisUntilFinished / 60) % 60;
+                String time = "";
+                if (seconds > 9) {
+                    time = "0" + minutes + ":" + seconds;
+                } else {
+                    time = "0" + minutes + ":" + "0" + seconds;
+                }
+                timer.setText(time);
+            }
+
+            @Override
+            public void onFinish() {
+                timer.setText("--:--");
+                resend.setEnabled(true);
+            }
+        }.start();
     }
 
 
