@@ -3,6 +3,7 @@ package com.example.servicesondemand.activities;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -193,10 +194,25 @@ public class CreatePost extends AppCompatActivity {
                 int year = cal.get(Calendar.YEAR);
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog dialog = new DatePickerDialog(CreatePost.this,
+                final DatePickerDialog dialog = new DatePickerDialog(CreatePost.this,
                         android.R.style.Theme_DeviceDefault_Dialog,
                         mDatesetlistener, year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface d) {
+                        if (dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE) != null) {
+                            dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
+                        } else {
+                            Log.e(TAG, "Date Picker Negative Button is Null");
+                        }
+                        if (dialog.getButton(DatePickerDialog.BUTTON_POSITIVE) != null) {
+                            dialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+                        } else {
+                            Log.e(TAG, "Date Picker Positive Button is Null");
+                        }
+                    }
+                });
                 dialog.show();
             }
         });
