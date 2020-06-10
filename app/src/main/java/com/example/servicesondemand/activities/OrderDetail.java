@@ -20,6 +20,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.dialog.JobCompleteDialog;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
 import com.example.servicesondemand.model.Post;
@@ -153,10 +154,44 @@ public class OrderDetail extends AppCompatActivity {
         markCompleteJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.e("OrderDetail", "Mark Job Clicked");
+                JobCompleteDialog dialog = new JobCompleteDialog(OrderDetail.this, OrderDetail.this);
+                dialog.show();
             }
         });
+    }
 
+    public void markJobComplete(int budget) {
+        loading.setVisibility(View.VISIBLE);
+        main.setVisibility(View.GONE);
+        post.setBudget(budget);
+        post.setStatus("Completed");
+        reference.child("Jobs").child(post.getId()).setValue(post)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String userId = "";
+                        String userText = "";
+                        String workerId = "";
+                        String workerText = "";
+
+                        userId = otherUser.getId();
+                        userText = "The vendor " + user.getFirstName() + " " + user.getLastName() + " completed the job successfully, total amount to be paid for the job is " + post.getBudget() + " Rs.";
+                        workerId = user.getId();
+                        workerText = "You completed your job with " + otherUser.getFirstName() + " " + otherUser.getLastName() + ". Total amount to be collected from the user is " + post.getBudget() + " Rs.";
+                        helpers.sendNotification(userId, userText, workerId, workerText, post.getId());
+                        loading.setVisibility(View.GONE);
+                        main.setVisibility(View.VISIBLE);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        helpers.showError(OrderDetail.this, "ERROR", "SOMETHING WENT WRONG PLEASE TRY LATER");
+                        loading.setVisibility(View.GONE);
+                        main.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     private void cancelConfirmation() {
@@ -235,6 +270,11 @@ public class OrderDetail extends AppCompatActivity {
                                 break;
                             }
                             case "Completed": {
+                                if (user.getType() == 0) {
+                                    helpers.showSuccess(OrderDetail.this, "JOB COMPLETED", "Your job has been marked as completed. Total amount to be paid to vendor is " + post.getBudget() + " Rs.");
+                                } else {
+                                    helpers.showSuccess(OrderDetail.this, "JOB COMPLETED", "Your job has been marked as completed. Total amount to be collected from user is " + post.getBudget() + " Rs.");
+                                }
                                 break;
                             }
                         }

@@ -335,7 +335,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7dp"
-                    android:hint="Time required to complete the job (in minutes)"
+                    android:hint="Time required to complete the job (in hours)"
                     android:inputType="time"
                     android:textColor="#BBBABA"
                     android:textSize="14dp" />
@@ -367,7 +367,6 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="13dp"
                 android:background="@color/colorPrimary" />
-
 
         </LinearLayout>
 
