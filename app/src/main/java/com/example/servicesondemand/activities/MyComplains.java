@@ -50,7 +50,7 @@ public class MyComplains extends AppCompatActivity {
         noRecordFound = findViewById(R.id.noRecordFound);
 
         complainsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new ComplainAdapter();
+        adapter = new ComplainAdapter(getApplicationContext());
         complainsList.setAdapter(adapter);
         data = new ArrayList<>();
         loadComplains();

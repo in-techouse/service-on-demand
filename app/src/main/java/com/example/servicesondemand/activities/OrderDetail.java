@@ -1,5 +1,6 @@
 package com.example.servicesondemand.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.example.servicesondemand.R;
 import com.example.servicesondemand.dialog.JobCompleteDialog;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.Complain;
 import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,13 +42,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class OrderDetail extends AppCompatActivity {
     private static final String TAG = "OrderDetail";
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    private ValueEventListener listener, jobListener;
+    private ValueEventListener listener, jobListener, postListener;
     private Helpers helpers;
     private User user, otherUser;
     private Post post;
     private LinearLayout loading, main;
     protected CircleImageView image;
     private TextView phoneNumber, name, email;
+    private Complain complain;
+    private ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +74,10 @@ public class OrderDetail extends AppCompatActivity {
         }
 
         post = (Post) bundle.getSerializable("post");
+        complain = (Complain) bundle.getSerializable("complain");
 
-        if (post == null) {
-            Log.e(TAG, "Post is null");
+        if (post == null && complain == null) {
+            Log.e(TAG, "Post & Complain is null");
             finish();
             return;
         }
@@ -80,6 +85,54 @@ public class OrderDetail extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setHomeButtonEnabled(true);
 
+        loadingBar = new ProgressDialog(this);
+        helpers = new Helpers();
+        Session session = new Session(getApplicationContext());
+        user = session.getUser();
+        if (complain == null) {
+            fromPost();
+        } else {
+            fromComplain();
+        }
+    }
+
+    private void fromComplain() {
+        loadingBar.setTitle("LOADING");
+        loadingBar.setMessage("Please wait...");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.setCancelable(false);
+        loadingBar.show();
+        postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (postListener != null)
+                    reference.child("Jobs").child(complain.getJobId()).removeEventListener(postListener);
+                loadingBar.dismiss();
+                if (dataSnapshot.exists()) {
+                    post = dataSnapshot.getValue(Post.class);
+                    if (post != null) {
+                        fromPost();
+                    } else {
+                        helpers.showErrorWithClose(OrderDetail.this, "ERROR", "Something went wrong.\nPlease try again later.");
+                    }
+                } else {
+                    helpers.showErrorWithClose(OrderDetail.this, "ERROR", "Something went wrong.\nPlease try again later.");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (postListener != null)
+                    reference.child("Jobs").child(complain.getJobId()).removeEventListener(postListener);
+                loadingBar.dismiss();
+                helpers.showErrorWithClose(OrderDetail.this, "ERROR", "Something went wrong.\nPlease try again later.");
+            }
+        };
+
+        reference.child("Jobs").child(complain.getJobId()).addValueEventListener(postListener);
+    }
+
+    private void fromPost() {
         TextView date = findViewById(R.id.date);
         TextView time = findViewById(R.id.time);
         TextView offers = findViewById(R.id.offers);
@@ -97,10 +150,6 @@ public class OrderDetail extends AppCompatActivity {
         address.setText(post.getAddress());
         description.setText(post.getDescription());
         budget.setText(post.getBudget() + " Rs.");
-
-        helpers = new Helpers();
-        Session session = new Session(getApplicationContext());
-        user = session.getUser();
 
         SliderLayout slider = findViewById(R.id.slider);
         slider.setPresetTransformer(SliderLayout.Transformer.Accordion);

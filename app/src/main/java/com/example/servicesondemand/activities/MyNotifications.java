@@ -55,7 +55,7 @@ public class MyNotifications extends AppCompatActivity {
         notifications = new ArrayList<>();
 
         notificationsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new NotificationAdapter(user.getType());
+        adapter = new NotificationAdapter(user.getType(), getApplicationContext());
         notificationsList.setAdapter(adapter);
 
         if (user.getType() == 0) {

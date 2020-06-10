@@ -25,6 +25,7 @@ import com.example.servicesondemand.R;
 import com.example.servicesondemand.adapter.OfferAdapter;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.Notification;
 import com.example.servicesondemand.model.Offer;
 import com.example.servicesondemand.model.Post;
 import com.example.servicesondemand.model.User;
@@ -49,9 +50,12 @@ public class PostDetail extends AppCompatActivity {
     private Post post;
     private ProgressDialog loadingBar;
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    private ValueEventListener eventListener, jobOwnerListener;
+    private ValueEventListener eventListener, jobOwnerListener, jobListener;
     private OfferAdapter adapter;
     private List<Offer> jobOffers;
+    private Notification notification;
+    private LinearLayout sendOffer;
+    private RecyclerView offersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +79,10 @@ public class PostDetail extends AppCompatActivity {
         }
 
         post = (Post) bundle.getSerializable("post");
+        notification = (Notification) bundle.getSerializable("notification");
 
-        if (post == null) {
-            Log.e(TAG, "Post is null");
+        if (post == null && notification == null) {
+            Log.e(TAG, "Post & Notification is null");
             finish();
             return;
         }
@@ -90,8 +95,8 @@ public class PostDetail extends AppCompatActivity {
         Response = findViewById(R.id.response);
         PerHourCharge = findViewById(R.id.perHourCharge);
         JobTime = findViewById(R.id.jobtime);
-        LinearLayout sendOffer = findViewById(R.id.sendOffer);
-        RecyclerView offersList = findViewById(R.id.offersList);
+        sendOffer = findViewById(R.id.sendOffer);
+        offersList = findViewById(R.id.offersList);
 
         helpers = new Helpers();
 
@@ -157,7 +162,53 @@ public class PostDetail extends AppCompatActivity {
 
         Session session = new Session(getApplicationContext());
         user = session.getUser();
+        loadingBar = new ProgressDialog(this);
 
+        if (notification == null) {
+            fromPost();
+        } else {
+            fromNotification();
+        }
+    }
+
+    private void fromNotification() {
+        loadingBar.setTitle("LOADING");
+        loadingBar.setMessage("Please wait...");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.setCancelable(false);
+        loadingBar.show();
+
+        jobListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (jobListener != null)
+                    reference.child("Jobs").child(notification.getJobId()).removeEventListener(jobListener);
+                loadingBar.dismiss();
+                if (dataSnapshot.exists()) {
+                    post = dataSnapshot.getValue(Post.class);
+                    if (post != null) {
+                        fromPost();
+                    } else {
+                        helpers.showErrorWithClose(PostDetail.this, "ERROR", "Something went wrong.\nPlease try again later.");
+                    }
+                } else {
+                    helpers.showErrorWithClose(PostDetail.this, "ERROR", "Something went wrong.\nPlease try again later.");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (jobListener != null)
+                    reference.child("Jobs").child(notification.getJobId()).removeEventListener(jobListener);
+                loadingBar.dismiss();
+                helpers.showErrorWithClose(PostDetail.this, "ERROR", "Something went wrong.\nPlease try again later.");
+            }
+        };
+
+        reference.child("Jobs").child(notification.getJobId()).addValueEventListener(jobListener);
+    }
+
+    private void fromPost() {
         SliderLayout slider = findViewById(R.id.slider);
         slider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
@@ -189,8 +240,6 @@ public class PostDetail extends AppCompatActivity {
         status.setText(post.getStatus());
         address.setText(post.getAddress());
         description.setText(post.getDescription());
-
-        loadingBar = new ProgressDialog(this);
 
         if (user.getType() == 0) { //Check for checking the status of job k ye task kisi worker
             offersList.setVisibility(View.VISIBLE);
