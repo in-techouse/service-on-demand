@@ -26,4 +26,5 @@
     <string name="title_activity_order_detail">Order Detail</string>
     <string name="cancel_job">CANCEL JOB</string>
     <string name="mark_complete">MARK COMPLETE</string>
+    <string name="action_complaint">Make a Complaint</string>
 </resources>

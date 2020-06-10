@@ -8,17 +8,23 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicesondemand.R;
+import com.example.servicesondemand.adapter.ComplainAdapter;
 import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.director.Session;
+import com.example.servicesondemand.model.Complain;
 import com.example.servicesondemand.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyComplains extends AppCompatActivity {
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Complains");
@@ -29,6 +35,8 @@ public class MyComplains extends AppCompatActivity {
     private RecyclerView complainsList;
     private LinearLayout loading;
     private TextView noRecordFound;
+    private ComplainAdapter adapter;
+    private List<Complain> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,11 @@ public class MyComplains extends AppCompatActivity {
         complainsList = findViewById(R.id.complainsList);
         loading = findViewById(R.id.loading);
         noRecordFound = findViewById(R.id.noRecordFound);
+
+        complainsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new ComplainAdapter();
+        complainsList.setAdapter(adapter);
+        data = new ArrayList<>();
         loadComplains();
     }
 
@@ -62,8 +75,21 @@ public class MyComplains extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (listener != null)
                     reference.orderByChild("userId").equalTo(user.getId()).removeEventListener(listener);
-
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    Complain c = d.getValue(Complain.class);
+                    if (c != null) {
+                        data.add(c);
+                    }
+                }
                 loading.setVisibility(View.GONE);
+                adapter.setData(data);
+                if (data.size() > 0) {
+                    noRecordFound.setVisibility(View.GONE);
+                    complainsList.setVisibility(View.VISIBLE);
+                } else {
+                    noRecordFound.setVisibility(View.VISIBLE);
+                    complainsList.setVisibility(View.GONE);
+                }
             }
 
             @Override

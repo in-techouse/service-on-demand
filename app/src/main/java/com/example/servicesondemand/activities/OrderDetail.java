@@ -3,6 +3,7 @@ package com.example.servicesondemand.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -86,6 +87,7 @@ public class OrderDetail extends AppCompatActivity {
         TextView status = findViewById(R.id.status);
         TextView address = findViewById(R.id.address);
         TextView description = findViewById(R.id.description);
+        TextView budget = findViewById(R.id.budget);
 
         date.setText(post.getDate());
         time.setText(post.getTime());
@@ -94,6 +96,7 @@ public class OrderDetail extends AppCompatActivity {
         status.setText(post.getStatus());
         address.setText(post.getAddress());
         description.setText(post.getDescription());
+        budget.setText(post.getBudget() + " Rs.");
 
         helpers = new Helpers();
         Session session = new Session(getApplicationContext());
@@ -139,7 +142,6 @@ public class OrderDetail extends AppCompatActivity {
         }
 
         loadOtherUserDetail();
-
 
         cancelJob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,6 +234,9 @@ public class OrderDetail extends AppCompatActivity {
                                 helpers.showSuccess(OrderDetail.this, "JOB CANCELLED", "The job has been cancelled");
                                 break;
                             }
+                            case "Completed": {
+                                break;
+                            }
                         }
                     }
                 }
@@ -296,17 +301,28 @@ public class OrderDetail extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (jobListener != null)
-            reference.child("Jobs").child(post.getId()).removeEventListener(jobListener);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (user.getType() == 0) {
+            getMenuInflater().inflate(R.menu.menu_order_detail, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.e("OrderDetail", "Option Click Capture");
         switch (item.getItemId()) {
             case android.R.id.home: {
                 finish();
+                break;
+            }
+            case R.id.action_complain: {
+                Intent it = new Intent(OrderDetail.this, SubmitComplain.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("post", post);
+                bundle.putSerializable("vendor", otherUser);
+                it.putExtras(bundle);
+                startActivity(it);
                 break;
             }
         }
@@ -316,5 +332,12 @@ public class OrderDetail extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (jobListener != null)
+            reference.child("Jobs").child(post.getId()).removeEventListener(jobListener);
     }
 }

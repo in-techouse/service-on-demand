@@ -7,15 +7,16 @@ public class Post implements Serializable {
     private String id, userId, workerId, status, date, time, address, description, category;
     private double latitude, longitude;
     private List<String> images;
-    private int offers;
+    private int offers, budget;
 
     public Post() {
         offers = 0;
         latitude = 0;
         longitude = 0;
+        budget = 0;
     }
 
-    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, double latitude, double longitude, List<String> images, int offers) {
+    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, double latitude, double longitude, List<String> images, int offers, int budget) {
         this.id = id;
         this.userId = userId;
         this.workerId = workerId;
@@ -29,6 +30,15 @@ public class Post implements Serializable {
         this.longitude = longitude;
         this.images = images;
         this.offers = offers;
+        this.budget = budget;
+    }
+
+    public int getBudget() {
+        return budget;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
     }
 
     public String getId() {

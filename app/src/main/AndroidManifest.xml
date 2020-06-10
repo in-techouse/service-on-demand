@@ -36,7 +36,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SubmitComplain"
-            android:parentActivityName=".activities.PostDetail"
+            android:parentActivityName=".activities.OrderDetail"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.OfferVenderDetail"
@@ -50,10 +50,6 @@
             android:name=".activities.OfferDetail"
             android:parentActivityName=".activities.PostDetail"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activities.PostDetailAndSendOffer"
-            android:label="@string/title_activity_post_detail_and_send_offer"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.PostDetail"
             android:label="@string/title_activity_post_detail"
