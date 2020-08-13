@@ -19,6 +19,7 @@ import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Helpers {
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Notifications");
@@ -135,6 +136,41 @@ public class Helpers {
         NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
             manager.notify(10, builder.build());
+        }
+    }
+
+    public static String calculateDateDifference(String dateTime) {
+        try {
+            Log.e("DateTime", "Actual String Date time: " + dateTime);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd, MMM yyyy hh:mm a");
+            Date date = sdf.parse(dateTime);
+            Log.e("DateTime", "Actual: " + date.toString());
+            long estDateInLong = date.getTime();
+            long currentTimeInLong = Calendar.getInstance().getTimeInMillis();
+            long diff = (long) (currentTimeInLong - estDateInLong);
+            long diffDay = diff / (24 * 60 * 60 * 1000);
+            if (diffDay > 0) {
+                return diffDay + " Days ago";
+            } else {
+                diff = diff - (diffDay * 24 * 60 * 60 * 1000);
+                long diffHours = diff / (60 * 60 * 1000);
+                if (diffHours > 0) {
+                    return diffHours + " Hours ago";
+                } else {
+                    diff = diff - (diffHours * 60 * 60 * 1000);
+                    long diffMinutes = diff / (60 * 1000);
+                    if (diffMinutes > 0) {
+                        return diffMinutes + " Minutes ago";
+                    } else {
+                        diff = diff - (diffMinutes * 60 * 1000);
+                        long diffSeconds = diff / 1000;
+                        return diffSeconds + " Seconds ago";
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e("DateTime", "Exception: " + e.getMessage());
+            return "";
         }
     }
 }

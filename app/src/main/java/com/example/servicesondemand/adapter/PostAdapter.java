@@ -1,5 +1,6 @@
 package com.example.servicesondemand.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.activities.OrderDetail;
 import com.example.servicesondemand.activities.PostDetail;
+import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Post;
 
 import java.text.SimpleDateFormat;
@@ -46,20 +48,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PostHolder holder, final int position) {
         final Post post = data.get(position);
         Glide.with(context).load(post.getImages().get(0)).into(holder.image);
         holder.category.setText(post.getCategory());
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date d = format.parse(post.getDate());
-            String formattedDate = new SimpleDateFormat("EEE, dd/MM/yyyy").format(d);
-            holder.date.setText(formattedDate);
-        } catch (Exception e) {
-            holder.date.setText(post.getDate());
-        }
+        holder.date.setText(post.getDate());
         holder.time.setText(post.getTime());
+        holder.difference.setText(Helpers.calculateDateDifference(post.getPostedTime() == null ? "" : post.getPostedTime()));
         holder.offers.setText(post.getOffers() + "");
 
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +84,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     class PostHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView category, date, time, offers;
+        TextView category, date, time, offers, difference;
         CardView mainCard;
 
         PostHolder(@NonNull View itemView) {
@@ -98,6 +95,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
             time = itemView.findViewById(R.id.time);
             offers = itemView.findViewById(R.id.offers);
             mainCard = itemView.findViewById(R.id.mainCard);
+            difference = itemView.findViewById(R.id.difference);
         }
     }
 }

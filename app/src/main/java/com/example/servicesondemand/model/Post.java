@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Post implements Serializable {
-    private String id, userId, workerId, status, date, time, address, description, category;
+    private String id, userId, workerId, status, date, time, address, description, category, postedTime;
     private double latitude, longitude;
     private List<String> images;
     private int offers, budget;
@@ -16,7 +16,7 @@ public class Post implements Serializable {
         budget = 0;
     }
 
-    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, double latitude, double longitude, List<String> images, int offers, int budget) {
+    public Post(String id, String userId, String workerId, String status, String date, String time, String address, String description, String category, String postedTime, double latitude, double longitude, List<String> images, int offers, int budget) {
         this.id = id;
         this.userId = userId;
         this.workerId = workerId;
@@ -26,11 +26,20 @@ public class Post implements Serializable {
         this.address = address;
         this.description = description;
         this.category = category;
+        this.postedTime = postedTime;
         this.latitude = latitude;
         this.longitude = longitude;
         this.images = images;
         this.offers = offers;
         this.budget = budget;
+    }
+
+    public String getPostedTime() {
+        return postedTime;
+    }
+
+    public void setPostedTime(String postedTime) {
+        this.postedTime = postedTime;
     }
 
     public int getBudget() {

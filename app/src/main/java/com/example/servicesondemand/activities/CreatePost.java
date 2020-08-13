@@ -227,7 +227,7 @@ public class CreatePost extends AppCompatActivity {
                     mDisplayedDate.setText(strDate);
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
                     Date d = format.parse(strDate);
-                    strDate = new SimpleDateFormat("EEE, dd, MMM-yyyy").format(d);
+                    strDate = new SimpleDateFormat("EEE, dd, MMM yyyy").format(d);
                     mDisplayedDate.setText(strDate);
                 } catch (Exception e) {
                     Log.e(TAG, "Date parsing Exception: " + e.getMessage());
@@ -295,6 +295,8 @@ public class CreatePost extends AppCompatActivity {
         String id = reference.push().getKey();
         postObj.setId(id);
         postObj.setUserId(user.getId());
+        String strPostedDate = new SimpleDateFormat("EEE, dd, MMM yyyy hh:mm a").format(new Date());
+        postObj.setPostedTime(strPostedDate);
         reference.child(postObj.getId()).setValue(postObj)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

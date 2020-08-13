@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicesondemand.R;
 import com.example.servicesondemand.activities.PostDetail;
+import com.example.servicesondemand.director.Helpers;
 import com.example.servicesondemand.model.Notification;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         } else {
             holder.notification.setText(notification.getWorkerText());
         }
+        holder.difference.setText(Helpers.calculateDateDifference(notification.getDateTime()));
         holder.dateTime.setText(notification.getDateTime());
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,12 +72,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class NotificationHolder extends RecyclerView.ViewHolder {
-        TextView notification, dateTime;
+        TextView notification, dateTime, difference;
         CardView mainCard;
 
         NotificationHolder(@NonNull View itemView) {
             super(itemView);
             notification = itemView.findViewById(R.id.notification);
+            difference = itemView.findViewById(R.id.difference);
             dateTime = itemView.findViewById(R.id.dateTime);
             mainCard = itemView.findViewById(R.id.mainCard);
         }
